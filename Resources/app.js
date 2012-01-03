@@ -1,64 +1,124 @@
-// this sets the background color of the master UIView (when there are no windows/tab groups on it)
-Titanium.UI.setBackgroundColor('#000');
-
-// create tab group
-var tabGroup = Titanium.UI.createTabGroup();
-
-
-//
-// create base UI tab and root window
-//
-var win1 = Titanium.UI.createWindow({  
-    title:'Tab 1',
-    backgroundColor:'#fff'
-});
-var tab1 = Titanium.UI.createTab({  
-    icon:'KS_nav_views.png',
-    title:'Tab 1',
-    window:win1
+var mainWindow = Titanium.UI.createWindow({
+	title:'Less problems'
 });
 
-var label1 = Titanium.UI.createLabel({
-	color:'#999',
-	text:'I am Window 1',
-	font:{fontSize:20,fontFamily:'Helvetica Neue'},
-	textAlign:'center',
-	width:'auto'
+var nav = Titanium.UI.createView({
+	layout:'horizontal',
+	top:0,
+	left:0,
+	backgroundColor:'#fff',
+	height:25,
+	zIndex:1
 });
 
-win1.add(label1);
-
-//
-// create controls tab and root window
-//
-var win2 = Titanium.UI.createWindow({  
-    title:'Tab 2',
-    backgroundColor:'#fff'
-});
-var tab2 = Titanium.UI.createTab({  
-    icon:'KS_nav_ui.png',
-    title:'Tab 2',
-    window:win2
+var container = Titanium.UI.createView({
+	top:0
 });
 
-var label2 = Titanium.UI.createLabel({
-	color:'#999',
-	text:'I am Window 2',
-	font:{fontSize:20,fontFamily:'Helvetica Neue'},
-	textAlign:'center',
-	width:'auto'
+var btnOverzicht = Titanium.UI.createButton({
+	title:'Overzicht',
+	height:35
 });
 
-win2.add(label2);
+var btnProbleemToevoegen = Titanium.UI.createButton({
+	title:'Probleem toevoegen',
+	height:35
+});
+
+nav.add(btnOverzicht);
+nav.add(btnProbleemToevoegen);
+
+var overzichtView = Titanium.UI.createView({
+	backgroundColor:'#aaa',
+});
+
+var toevoegView = Titanium.UI.createView({
+	backgroundColor:'#555',
+	layout:'vertical'
+});
+
+btnOverzicht.addEventListener('click', function(e){
+	container.remove(container.children[0]);
+	container.add(overzichtView);
+});
+
+btnProbleemToevoegen.addEventListener('click', function(e){
+	container.remove(container.children[0]);
+	container.add(toevoegView);
+});
+
+var lblOverzicht = Titanium.UI.createLabel({
+	text:'Overzicht',
+	color:'#000'
+});
+
+var lblProbleemToevoegen = Titanium.UI.createLabel({
+	text:'Probleem toevoegen',
+	color:'#000'
+});
+
+toevoegView.add(lblProbleemToevoegen);
+overzichtView.add(lblOverzicht);
+
+mainWindow.open({ fullscreen:true });
+mainWindow.add(nav);
+mainWindow.add(container);
+container.add(overzichtView);
 
 
 
-//
-//  add tabs
-//
-tabGroup.addTab(tab1);  
-tabGroup.addTab(tab2);  
 
 
-// open tab group
-tabGroup.open();
+//Titel
+//Lokaal
+//Beschrijving
+
+var HTitel = Titanium.UI.createView({
+	layout:'horizontal',
+	left: 25,
+	right: 25
+});
+
+var lblTitel = Titanium.UI.createLabel({
+	text:'Titel: '
+});
+
+var txtTitel = Titanium.UI.createTextField({
+	width:'75%'
+});
+
+HTitel.add(lblTitel);
+HTitel.add(txtTitel);
+toevoegView.add(HTitel);
+
+
+
+var HLokaal = Titanium.UI.createView({
+	layout:'horizontal',
+	left:25,
+	right:25
+});
+
+var lblLokaal = Titanium.UI.createLabel({
+	text:'Lokaal: '
+});
+
+var txtLokaal = Titanium.UI.createTextField({
+	width:'75%'
+});
+
+HLokaal.add(lblLokaal);
+HLokaal.add(txtLokaal);
+toevoegView.add(HLokaal);
+
+var lblBeschrijving = Titanium.UI.createLabel({
+	text:'Beschrijving:'
+});
+
+var txtAreaBeschrijving = Titanium.UI.createTextArea({
+	width: '100%',
+	height: '100%'
+});
+
+toevoegView.add(lblBeschrijving);
+toevoegView.add(txtAreaBeschrijving);
