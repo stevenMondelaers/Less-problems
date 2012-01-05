@@ -1,21 +1,30 @@
 Logfile initialized
-[INFO] logfile = D:\Workspaces\Titanium\Less-problems\build.log
-[DEBUG] C:\Users\Steven_School\AppData\Roaming\Titanium\mobilesdk\win32\1.7.5\android\builder.py simulator Less problems D:\Android\android-sdk D:\Workspaces\Titanium\Less-problems eu.lessius.mechelen.lessproblems 11 HVGA 192.168.1.100:55576
+[INFO] logfile = /Users/Niels/Projecten GIT/Less-problems/build.log
+[DEBUG] /Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.8.0.1/android/builder.py simulator Less problems /android-sdk /Users/Niels/Projecten GIT/Less-problems eu.lessius.mechelen.lessproblems 4 HVGA 
 [INFO] Building Less problems for Android ... one moment
-[INFO] Titanium SDK version: 1.7.5 (11/02/11 17:00 ab20af7)
+[INFO] Titanium SDK version: 1.8.0.1 (12/22/11 13:09 fbdc96f)
 [DEBUG] Waiting for device to be ready ...
 [TRACE] adb devices returned 1 devices/emulators
-[DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.032000 seconds on emulator to get ready
-[DEBUG] eu.lessius.mechelen.lessproblems installed? True
-[INFO] Fastdev server running, deploying in Fastdev mode
-[INFO] Copying project resources..
-[TRACE] COPYING MODIFIED FILE: D:\Workspaces\Titanium\Less-problems\Resources\app.js => D:\Workspaces\Titanium\Less-problems\build\android\bin\assets\Resources\app.js
-[INFO] Tiapp.xml unchanged, skipping class generation
-[DEBUG] Processing Android resource drawables
-[INFO] Waiting for SDCard to become available..
-[INFO] Re-launching application ... Less problems
-[INFO] Launching application ... Less problems
-[TRACE] Launch output: Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=eu.lessius.mechelen.lessproblems/.LessProblemsActivity }
-Warning: Activity not started, its current task has been brought to the front
-
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 1 devices/emulators
+[DEBUG] Device connected... (waited 15 seconds)
+[DEBUG] waited 15.088472 seconds on emulator to get ready
+[INFO] Waiting for the Android Emulator to become available
+[INFO] Android Emulator has exited
+[ERROR] Exception occured while building Android project:
+[ERROR] Traceback (most recent call last):
+[ERROR]   File "/Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.8.0.1/android/builder.py", line 2039, in <module>
+[ERROR]     s.build_and_run(False, avd_id, debugger_host=debugger_host)
+[ERROR]   File "/Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.8.0.1/android/builder.py", line 1696, in build_and_run
+[ERROR]     self.wait_for_device('e')
+[ERROR]   File "/Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.8.0.1/android/builder.py", line 356, in wait_for_device
+[ERROR]     return self.wait_for_home(type)
+[ERROR]   File "/Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.8.0.1/android/builder.py", line 292, in wait_for_home
+[ERROR]     processes = self.sdk.list_processes(['-%s' % type])
+[ERROR]   File "/Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.8.0.1/android/androidsdk.py", line 252, in list_processes
+[ERROR]     out = self.run_adb(['shell', 'ps'], adb_args)
+[ERROR]   File "/Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.8.0.1/android/androidsdk.py", line 248, in run_adb
+[ERROR]     raise Exception(err)
+[ERROR] Exception: error: device not found
+[ERROR] 
