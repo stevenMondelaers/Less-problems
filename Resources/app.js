@@ -4,9 +4,15 @@ var forms = require('forms');
 
 //-- Window Overzicht
 var window_overzicht = Ti.UI.createWindow({
-  backgroundColor : "333",
-  color: "#FFF"
+  backgroundColor : "#333",
+  color: "#FFF",
+  navBarHidden:true,
+  layout:'vertical'
 });
+
+var overzicht_scrollView = Ti.UI.createScrollView({
+	layout:'vertical'
+})
 
 var label1 = Ti.UI.createLabel({
   text:"Hier komt het overzicht",
@@ -18,7 +24,33 @@ var label1 = Ti.UI.createLabel({
   textAlign: 'center',
 });
 
-window_overzicht.add(label1);
+var xhr = Titanium.Network.createHTTPClient();
+
+xhr.onload = function(e){
+	var doc = this.responseXML.documentElement;
+	
+	var elements = doc.getChildNodes;
+	label1.text = elements.length;
+			
+	for(var i=0; i<elements.length;i++){
+		var item = elements.item(i);
+		if(i == 0){
+			var lblTitel = Ti.UI.createLabel({
+			text:item.getElementsByTagName('title').text,
+			left:0
+		})
+		overzicht_scrollView.add(lblTitel);			
+		}
+		
+	}
+}
+
+xhr.open('GET', 'http://less-problems.webatu.com/api/views/problems.xml');
+xhr.send();
+
+window_overzicht.add(overzicht_scrollView);
+overzicht_scrollView.add(label1);
+
 
 //-- Window Probleem
 var fields = [
