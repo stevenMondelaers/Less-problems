@@ -9,12 +9,12 @@
 
 NSString * const TI_APPLICATION_DEPLOYTYPE = @"development";
 NSString * const TI_APPLICATION_ID = @"eu.lessius.mechelen.lessproblems";
-NSString * const TI_APPLICATION_PUBLISHER = @"Steven";
+NSString * const TI_APPLICATION_PUBLISHER = @"Steven - Niels";
 NSString * const TI_APPLICATION_URL = @"http://";
 NSString * const TI_APPLICATION_NAME = @"Less problems";
 NSString * const TI_APPLICATION_VERSION = @"1.0";
 NSString * const TI_APPLICATION_DESCRIPTION = @"not specified";
-NSString * const TI_APPLICATION_COPYRIGHT = @"2011 by Steven";
+NSString * const TI_APPLICATION_COPYRIGHT = @"2011 by Steven - Niels";
 NSString * const TI_APPLICATION_GUID = @"cbb3c28e-54e5-4d21-a661-f0329ccaf91d";
 BOOL const TI_APPLICATION_ANALYTICS = true;
 

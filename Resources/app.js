@@ -26,7 +26,8 @@ var fields = [
 	{ title:'Beschrijving', type:'text', id:'beschrijving' },
 	{ title:'Locatie', type:'picker', id:'locatie', data: [
 		'Kruidtuin', 'De Vest', 'Nog iets anders'
-	] }
+	] },
+	{ title:'Submit', type:'submit', id:'registerProblem' }
 ];
 
 var window_probleem = Ti.UI.createWindow({  
@@ -39,8 +40,9 @@ var form = forms.createForm({
 	fields: fields
 });
 
-form.addEventListener('registerUser', function(e) {
+form.addEventListener('registerProblem', function(e) {
 	Ti.API.debug(e);
+	alert(e.values);
 });
 
 window_probleem.add(form);
