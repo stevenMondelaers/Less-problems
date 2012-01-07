@@ -6,15 +6,18 @@ Logfile initialized
 [DEBUG] Waiting for device to be ready ...
 [TRACE] adb devices returned 1 devices/emulators
 [DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.030000 seconds on emulator to get ready
+[DEBUG] waited 0.028000 seconds on emulator to get ready
 [DEBUG] eu.lessius.mechelen.lessproblems installed? True
 [INFO] Fastdev server running, deploying in Fastdev mode
 [INFO] Copying project resources..
+[TRACE] COPYING MODIFIED FILE: D:\Workspaces\Titanium\Less-problems\Resources\app.js => D:\Workspaces\Titanium\Less-problems\build\android\bin\assets\Resources\app.js
+[TRACE] COPYING MODIFIED FILE: D:\Workspaces\Titanium\Less-problems\Resources\lib\forms.js => D:\Workspaces\Titanium\Less-problems\build\android\bin\assets\Resources\lib\forms.js
+[TRACE] COPYING MODIFIED FILE: D:\Workspaces\Titanium\Less-problems\Resources\new_problem.js => D:\Workspaces\Titanium\Less-problems\build\android\bin\assets\Resources\new_problem.js
+[TRACE] COPYING MODIFIED FILE: D:\Workspaces\Titanium\Less-problems\Resources\overview.js => D:\Workspaces\Titanium\Less-problems\build\android\bin\assets\Resources\overview.js
 [INFO] Tiapp.xml unchanged, skipping class generation
 [DEBUG] Processing Android resource drawables
 [INFO] Waiting for SDCard to become available..
 [INFO] Re-launching application ... Less problems
 [INFO] Launching application ... Less problems
 [TRACE] Launch output: Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=eu.lessius.mechelen.lessproblems/.LessProblemsActivity }
-Warning: Activity not started, its current task has been brought to the front
 
