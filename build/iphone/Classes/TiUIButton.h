@@ -16,12 +16,6 @@
 	int style;
 	
 	BOOL eventAlreadyTriggered;
-    //Variables holding for control state images
-    BOOL hasBackgroundForStateNormal;
-    BOOL hasBackgroundForStateFocused;
-    BOOL hasBackgroundForStateDisabled;
-    BOOL hasBackgroundForStateSelected;
-
 }
 
 -(UIButton*)button;

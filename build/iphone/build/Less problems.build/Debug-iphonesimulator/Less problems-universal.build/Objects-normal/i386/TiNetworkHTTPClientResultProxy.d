@@ -22,7 +22,6 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestConfig.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIProgressDelegate.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASICacheDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMDocumentProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/GDataXMLNode.h \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/tree.h \
@@ -48,6 +47,7 @@ dependencies: \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/SAX2.h \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/xpath.h \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/xpathInternals.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMElementProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNodeProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/KrollMethod.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/KrollMethodDelegate.h \

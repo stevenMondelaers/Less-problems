@@ -39,24 +39,13 @@ dependencies: \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/SAX2.h \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/xpath.h \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/xpathInternals.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMElementProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNodeProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNodeListProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMTextNodeProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TIDOMCharacterDataProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMElementProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMAttrProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMCDATANodeProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMCommentProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMPIProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMDocFragProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TIDOMDOMImplementationProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TIDOMDocumentTypeProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMEntityRefProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUtils.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiColor.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDimension.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/WebFont.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFile.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBuffer.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMValidator.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h

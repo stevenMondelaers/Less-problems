@@ -15,7 +15,6 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/headers/TiCore/TiContextRefPrivate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/KrollCallback.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/KrollObject.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TIDOMCharacterDataProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNodeProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/GDataXMLNode.h \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/tree.h \

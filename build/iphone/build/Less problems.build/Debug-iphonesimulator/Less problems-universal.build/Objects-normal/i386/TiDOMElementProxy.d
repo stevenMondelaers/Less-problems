@@ -41,13 +41,10 @@ dependencies: \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/xpathInternals.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNodeProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNodeListProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMAttrProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNamedNodeMapProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUtils.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiColor.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDimension.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/WebFont.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFile.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBuffer.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMValidator.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h

@@ -58,7 +58,7 @@ var setupPickerTextField = function(textField, pickerType, data) {
 	
 	textField.addEventListener('focus', function(e) {
 		e.source.blur(); 
-		require('semiModalPicker').createSemiModalPicker({
+		require('lib/semiModalPicker').createSemiModalPicker({
 			textField: textField,
 			value: textField.value,
 			type: pickerType,

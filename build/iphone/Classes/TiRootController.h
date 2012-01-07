@@ -12,6 +12,8 @@
 
 @protocol TiRootController
 @required
+-(void)manuallyRotateToOrientation:(UIInterfaceOrientation)orientation;
+
 -(void)windowFocused:(UIViewController*)focusedViewController;
 -(void)windowClosed:(UIViewController *)closedViewController;
 
@@ -29,6 +31,7 @@
 -(void)didKeyboardFocusOnProxy:(TiViewProxy<TiKeyboardFocusableView> *)visibleProxy;
 -(void)didKeyboardBlurOnProxy:(TiViewProxy<TiKeyboardFocusableView> *)blurredProxy;
 
+-(TiOrientationFlags)allowedOrientations;
 -(BOOL)isTopWindow:(TiWindowProxy*)window;
 
 @end

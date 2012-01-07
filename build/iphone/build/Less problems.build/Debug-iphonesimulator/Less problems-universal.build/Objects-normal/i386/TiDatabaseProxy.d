@@ -29,5 +29,4 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/WebFont.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFile.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBuffer.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFilesystemFileProxy.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h

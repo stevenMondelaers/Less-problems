@@ -11,6 +11,7 @@
 #import "TiUtils.h"
 
 #ifdef USE_TI_APPIOS
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 
 @implementation TiAppiOSLocalNotificationProxy
 
@@ -30,4 +31,5 @@
 
 @end
 
+#endif
 #endif

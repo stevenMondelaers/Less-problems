@@ -12,7 +12,6 @@
 #import "TiFilesystemFileProxy.h"
 #import "TiFilesystemBlobProxy.h"
 #import "TiFilesystemFileStreamProxy.h"
-#import "TiHost.h"
 
 #if TARGET_IPHONE_SIMULATOR 
 extern NSString * TI_APPLICATION_RESOURCE_DIR;

@@ -49,10 +49,11 @@ typedef enum
 @property(nonatomic,readwrite,assign) TiUITableView *table;
 @property(nonatomic,readwrite,assign) TiUITableViewSectionProxy *section;
 @property(nonatomic,readwrite,assign) NSInteger row;
-@property(nonatomic,readwrite,assign) TiUITableViewCell* callbackCell;
+@property(nonatomic,readwrite,retain) TiUITableViewCell* callbackCell;
 
 +(void)clearTableRowCell:(UITableViewCell*)cell;
 -(void)initializeTableViewCell:(UITableViewCell*)cell;
+-(void)renderTableViewCell:(UITableViewCell*)cell;
 -(CGFloat)sizeWidthForDecorations:(CGFloat)oldWidth forceResizing:(BOOL)force;
 -(CGFloat)rowHeight:(CGFloat)width;
 -(TiProxy *)touchedViewProxyInCell:(UITableViewCell *)targetCell atPoint:(CGPoint*)point;

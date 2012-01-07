@@ -83,7 +83,6 @@
 		[self makeMethod:@selector(setRequestHeader:) args:YES key:@"setRequestHeader"];
 		[self makeMethod:@selector(setTimeout:) args:YES key:@"setTimeout"];
 		[self makeMethod:@selector(getResponseHeader:) args:YES key:@"getResponseHeader"];
-		[self makeMethod:@selector(clearCookies:) args:YES key:@"clearCookies"];
 		
 		[self makeDynamicProperty:@selector(responseText) key:@"responseText"];
 		// responseXML is special!
@@ -108,24 +107,22 @@
 -(TiDOMDocumentProxy*)responseXML
 {
 	NSString* responseText = [self valueForKey:@"responseText"];
-	if (![responseText isEqual:(id)[NSNull null]])
+	if (responseText!=nil)
 	{
 		TiDOMDocumentProxy *dom = [[[TiDOMDocumentProxy alloc] _initWithPageContext:[self executionContext]] autorelease];
 		[dom parseString:responseText];
 		return dom;
 	}
-	return (id)[NSNull null];
+	return nil;
 }
 
-// See comment in TiNetworkHTTPClientProxy about case-correction pre-iOS 5
 -(id)getResponseHeader:(id)args
 {
-    ENSURE_SINGLE_ARG(args, NSString);
-    
 	id result = [delegate getResponseHeader:args];
 	if (result == nil) {
-        NSString* header = [TiUtils caseCorrect:args];
-		result = [responseHeaders objectForKey:header];
+		id key = [args objectAtIndex:0];
+		ENSURE_TYPE(key,NSString);
+		result = [responseHeaders objectForKey:key];
 	}
 	return result;
 }

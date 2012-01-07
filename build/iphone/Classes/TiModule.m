@@ -41,7 +41,6 @@
 	[self contextWasShutdown:context];
 	if(pageContext == context){
 		pageContext = nil;
-		pageKrollObject = nil;
 	}
 	//DO NOT run super shutdown here, as we want to change the behavior that TiProxy does.
 }
@@ -49,7 +48,6 @@
 -(void)setPageContext:(id<TiEvaluator>)evaluator
 {
 	pageContext = evaluator; // don't retain
-	pageKrollObject = nil;
 }
 
 -(void)setHost:(TiHost*)host_
@@ -205,10 +203,14 @@
 
 -(id)bindCommonJSModule:(NSString*)code
 {
-	NSString *js = [[NSString alloc] initWithFormat:Lessproblems$ModuleRequireFormat,code];
+	NSMutableString *js = [NSMutableString string];
+	
+	[js appendString:@"(function(exports){"];
+	[js appendString:code];
+	[js appendString:@"return exports;"];
+	[js appendString:@"})({})"];
 	
 	id result = [[self pageContext] evalJSAndWait:js];
-	[js release];
 	if ([result isKindOfClass:[NSDictionary class]])
 	{
 		for (id key in result)

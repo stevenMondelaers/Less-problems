@@ -24,8 +24,6 @@
 {
 	[searchView setDelegate:nil];
 	RELEASE_TO_NIL(searchView);
-	[backgroundLayer removeFromSuperlayer];
-	RELEASE_TO_NIL(backgroundLayer);
 	[super dealloc];
 }
 
@@ -43,8 +41,7 @@
 
 -(void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds
 {
-	[[self searchBar] setFrame:bounds];
-	[backgroundLayer setFrame:bounds];
+	[TiUtils setView:[self searchBar] positionRect:bounds];
 }
 
 -(void)setDelegate:(id<UISearchBarDelegate>)delegate_
@@ -110,17 +107,6 @@
 	[search setBarStyle:[TiUtils barStyleForColor:newBarColor]];
 	[search setTintColor:[TiUtils barColorForColor:newBarColor]];
 	[search setTranslucent:[TiUtils barTranslucencyForColor:newBarColor]];
-}
-
--(CALayer *)backgroundImageLayer
-{
-	if(backgroundLayer==nil)
-	{
-		backgroundLayer = [[CALayer alloc] init];
-		[backgroundLayer setFrame:[self bounds]];
-		[[[self searchBar] layer] insertSublayer:backgroundLayer atIndex:1];
-	}
-	return backgroundLayer;
 }
 
 #pragma mark Delegate 

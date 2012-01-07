@@ -21,7 +21,6 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestConfig.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIProgressDelegate.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASICacheDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiNetworkHTTPClientResultProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUtils.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiColor.h \
@@ -75,6 +74,6 @@ dependencies: \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/SAX2.h \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/xpath.h \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/xpathInternals.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMElementProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNodeProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Mimetypes.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIDownloadCache.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Mimetypes.h

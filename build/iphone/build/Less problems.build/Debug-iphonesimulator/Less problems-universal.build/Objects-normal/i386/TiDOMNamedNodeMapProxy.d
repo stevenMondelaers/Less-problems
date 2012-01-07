@@ -39,10 +39,7 @@ dependencies: \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/SAX2.h \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/xpath.h \
   /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/include/libxml2/libxml/xpathInternals.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMElementProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNodeProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMAttrProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNodeListProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUtils.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiColor.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDimension.h \

@@ -42,23 +42,6 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMDocumentProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMElementProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMTextNodeProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TIDOMCharacterDataProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNamedNodeMapProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNodeListProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMAttrProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMCDATANodeProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMCommentProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TIDOMDocumentTypeProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMDocFragProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMPIProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMEntityProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMEntityRefProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMNotationProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUtils.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiColor.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDimension.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/WebFont.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFile.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBuffer.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMValidator.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDOMAttrProxy.h

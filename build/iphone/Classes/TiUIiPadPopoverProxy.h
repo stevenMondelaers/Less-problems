@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2010-2011 by Lessproblems, Inc. All Rights Reserved.
+ * Copyright (c) 2010 by Lessproblems, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  * 
@@ -10,6 +10,8 @@
 
 #import "TiViewProxy.h"
 #import "TiViewController.h"
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 
 //The iPadPopoverProxy should be seen more as like a window or such, because
 //The popover controller will contain the viewController, which has the view.
@@ -27,8 +29,6 @@
 	UIPopoverArrowDirection directions;
 	
 	BOOL isShowing;
-    BOOL isDismissing;
-    NSCondition* closingCondition;
 }
 
 //Because the Popover isn't meant to be placed in anywhere specific, 
@@ -46,5 +46,7 @@
 
 
 @end
+
+#endif
 
 #endif

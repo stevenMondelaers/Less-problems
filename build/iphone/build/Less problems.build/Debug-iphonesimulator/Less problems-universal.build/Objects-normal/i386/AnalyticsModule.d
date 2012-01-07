@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/AnalyticsModule.mm \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/AnalyticsModule.m \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBase.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiThreading.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiPublicAPI.h \
@@ -54,7 +54,6 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestConfig.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIProgressDelegate.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASICacheDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/SBJSON.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/NSData+Additions.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/Reachability.h

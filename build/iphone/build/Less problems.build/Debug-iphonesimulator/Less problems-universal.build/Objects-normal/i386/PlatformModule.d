@@ -23,7 +23,7 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFile.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBuffer.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiPlatformDisplayCaps.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/PlatformModuleDisplayCapsProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiApp.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiHost.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Bridge.h \

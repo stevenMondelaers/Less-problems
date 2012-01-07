@@ -5,7 +5,6 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestConfig.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIProgressDelegate.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASICacheDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASINetworkQueue.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDimension.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBase.h \

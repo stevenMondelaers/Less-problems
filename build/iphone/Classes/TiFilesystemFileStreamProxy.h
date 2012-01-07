@@ -7,7 +7,7 @@
  * WARNING: This is generated code. Modify at your own risk and without support.
  */
 
-#if defined(USE_TI_FILESYSTEM) || defined(USE_TI_DATABASE)
+#ifdef USE_TI_FILESYSTEM
 
 #import "TiStreamProxy.h"
 

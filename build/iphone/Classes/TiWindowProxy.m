@@ -24,7 +24,7 @@ TiOrientationFlags TiOrientationFlagsFromObject(id args)
 	TiOrientationFlags result = TiOrientationNone;
 	for (id mode in args)
 	{
-		UIInterfaceOrientation orientation = (UIInterfaceOrientation)[TiUtils orientationValue:mode def:-1];
+		UIInterfaceOrientation orientation = [TiUtils orientationValue:mode def:-1];
 		switch (orientation)
 		{
 			case UIDeviceOrientationPortrait:
@@ -58,7 +58,6 @@ TiOrientationFlags TiOrientationFlagsFromObject(id args)
 
 @implementation TiWindowProxy
 @synthesize navController, controller;
-@synthesize opening;
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
@@ -82,31 +81,26 @@ TiOrientationFlags TiOrientationFlagsFromObject(id args)
 	return controller;
 }
 
--(void)releaseController
-{
-	[(TiViewController *)controller setProxy:nil];
-	[controller performSelectorOnMainThread:@selector(release) withObject:nil waitUntilDone:NO];
-	controller = nil;
-}
-
 -(void)replaceController
 {
 	if (controller != nil) {
-		[self releaseController];
+		[(TiViewController *)controller setProxy:nil];
+		RELEASE_TO_NIL(controller);
 		[self controller];
 	}
 }
 
 -(void) dealloc {
 	RELEASE_TO_NIL(navController);
-	[self releaseController];
+	[(TiViewController *)controller setProxy:nil];
+	RELEASE_TO_NIL(controller);
 	
 	[super dealloc];
 }
 
 -(void)_destroy
 {
-	[self releaseController];
+	[(TiViewController*)controller setProxy:nil];
 
 	RELEASE_TO_NIL(tab);
 	RELEASE_TO_NIL(reattachWindows);
@@ -241,7 +235,8 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 	}
 	
 	RELEASE_TO_NIL(navController);
-	[self releaseController];
+	[(TiViewController *)controller setProxy:nil];
+	RELEASE_TO_NIL(controller);
 	
 	[self windowDidClose];
 	[self forgetSelf];
@@ -317,7 +312,8 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 // to a tab or nil to disassociate
 -(void)_associateTab:(UIViewController*)controller_ navBar:(UINavigationController*)navbar_ tab:(TiProxy<TiTab>*)tab_ 
 {
-	[self releaseController];
+	[(TiViewController *)controller setProxy:nil];
+	RELEASE_TO_NIL(controller);
 	RELEASE_TO_NIL(navController);
 	RELEASE_TO_NIL(tab);
 	
@@ -326,7 +322,7 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 		navController = [navbar_ retain];
 		controller = [controller_ retain];
 		[(TiViewController *)controller setProxy:self];
-		tab = (TiViewProxy<TiTab>*)[tab_ retain];
+		tab = [tab_ retain];
 		
 		[self _tabAttached];
 	}
@@ -362,6 +358,10 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 -(BOOL)isRootViewAttached
 {
 	BOOL result = ([[[[TiApp app] controller] view] superview]!=nil);
+	if (!result)
+	{
+		NSLog(@"[WARN] We still care about isRootViewAttached!!!!!!!");
+	}
 	return result;
 }
 
@@ -393,7 +393,7 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 		}
 		opening = YES;
 	}
-	[self performSelectorOnMainThread:@selector(openOnUIThread:) withObject:args waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector(openOnUIThread:) withObject:args waitUntilDone:NO];
 }
 
 -(void)openOnUIThread:(NSArray*)args
@@ -450,6 +450,7 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 				[wc setModalTransitionStyle:style];
 				[nc setModalTransitionStyle:style];
 			}
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 			style = [TiUtils intValue:@"modalStyle" properties:dict def:-1];
 			if (style!=-1)
 			{
@@ -461,7 +462,7 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 				    [nc setModalPresentationStyle:style];
 				}
 			}
-
+#endif		
 //			[self setController:wc];
 			[self setNavController:nc];
 			BOOL animated = [TiUtils boolValue:@"animated" properties:dict def:YES];
@@ -603,9 +604,10 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 	if([self viewAttached]) {
 		myview = [self view];
 	}
+	[[myview retain] autorelease];
+	
 	// hold ourself during close
-	[myview retain];	
-	[self retain];
+	[[self retain] autorelease];
 
 	[[[TiApp app] controller] willHideViewController:controller animated:YES];
 	VerboseLog(@"%@ (modal:%d)%@",self,modalFlag,CODELOCATION);
@@ -656,8 +658,6 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 			[self windowClosed];
 		}
 	}
-	[myview release];
-	[self release];
 }
 
 -(void)attachViewToTopLevelWindow
@@ -715,43 +715,17 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 	focused = newFocused;
 }
 
-#pragma mark TIUIViewController methods
-/*
- *	Over time, we should move focus and blurs to be triggered by standard
- *	Cocoa conventions instead of second-guessing iOS. This will be a slow
- *	transition, and in the meantime, verbose debug statements of focus being
- *	already set/cleared should not be a need for panic.
- */
+-(void)ignoringRotationToOrientation:(UIInterfaceOrientation)orientation
+{
+    // For subclasses
+}
 
-- (void)viewDidAppear:(BOOL)animated
+#pragma mark Animation Delegates
+
+- (void)viewDidAppear:(BOOL)animated;    // Called when the view is about to made visible. Default does nothing
 {
 	[[self parentOrientationController]
 			childOrientationControllerChangedFlags:self];
-
-	if (!focused)
-	{
-		[self fireFocus:YES];
-	}
-#ifdef VERBOSE
-	else
-	{
-		NSLog(@"[DEBUG] Focused was already set while in viewDidAppear.");
-	}
-#endif	
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-	if (focused)
-	{
-		[self fireFocus:NO];
-	}
-#ifdef VERBOSE
-	else
-	{
-		NSLog(@"[DEBUG] Focused was already cleared while in viewWillDisappear.");
-	}
-#endif
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -763,8 +737,6 @@ END_UI_THREAD_PROTECTED_VALUE(opened)
 {
 	[self parentWillHide];
 }
-
-#pragma mark Animation Delegates
 
 -(BOOL)animationShouldTransition:(id)sender
 {

@@ -21,20 +21,20 @@ static NSLock *readLock = nil;
 	}
 }
 
-+ (id)inputStreamWithFileAtPath:(NSString *)path request:(ASIHTTPRequest *)theRequest
++ (id)inputStreamWithFileAtPath:(NSString *)path request:(ASIHTTPRequest *)request
 {
-	ASIInputStream *theStream = [[[self alloc] init] autorelease];
-	[theStream setRequest:theRequest];
-	[theStream setStream:[NSInputStream inputStreamWithFileAtPath:path]];
-	return theStream;
+	ASIInputStream *stream = [[[self alloc] init] autorelease];
+	[stream setRequest:request];
+	[stream setStream:[NSInputStream inputStreamWithFileAtPath:path]];
+	return stream;
 }
 
-+ (id)inputStreamWithData:(NSData *)data request:(ASIHTTPRequest *)theRequest
++ (id)inputStreamWithData:(NSData *)data request:(ASIHTTPRequest *)request
 {
-	ASIInputStream *theStream = [[[self alloc] init] autorelease];
-	[theStream setRequest:theRequest];
-	[theStream setStream:[NSInputStream inputStreamWithData:data]];
-	return theStream;
+	ASIInputStream *stream = [[[self alloc] init] autorelease];
+	[stream setRequest:request];
+	[stream setStream:[NSInputStream inputStreamWithData:data]];
+	return stream;
 }
 
 - (void)dealloc
@@ -65,7 +65,7 @@ static NSLock *readLock = nil;
 
 /*
  * Implement NSInputStream mandatory methods to make sure they are implemented
- * (necessary for MacRuby for example) and avoid the overhead of method
+ * (necessary for MacRuby for example) and avoir the overhead of method
  * forwarding for these common methods.
  */
 - (void)open

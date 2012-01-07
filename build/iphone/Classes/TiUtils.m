@@ -21,8 +21,10 @@
 #import "TiFile.h"
 #import "TiBlob.h"
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 // for checking version
 #import <sys/utsname.h>
+#endif
 
 #import "UIImage+Resize.h"
 
@@ -81,6 +83,7 @@ static void getAddrInternal(char* macAddress, const char* ifName) {
 	static CGFloat scale = 0.0;
 	if (scale == 0.0)
 	{
+#if __IPHONE_3_2 <= __IPHONE_OS_VERSION_MAX_ALLOWED
 // NOTE: iPad in iPhone compatibility mode will return a scale factor of 2.0
 // when in 2x zoom, which leads to false positives and bugs. This tries to
 // future proof against possible different model names, but in the event of
@@ -95,12 +98,13 @@ static void getAddrInternal(char* macAddress, const char* ifName) {
 				return NO;
 			}
 		}
-
+#endif
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
 		{
 			scale = [[UIScreen mainScreen] scale];
 		}
-
+#endif
 	}
 	return scale > 1.0;
 }
@@ -110,18 +114,30 @@ static void getAddrInternal(char* macAddress, const char* ifName) {
 	return [UIView instancesRespondToSelector:@selector(drawRect:forViewPrintFormatter:)];
 }
 
-+(BOOL)isIOS5OrGreater
++(BOOL)isIOS4OrGreater
 {
-  return [UIAlertView instancesRespondToSelector:@selector(alertViewStyle)];
+	return [UIView instancesRespondToSelector:@selector(contentScaleFactor)];
+}
+
++(BOOL)isiPhoneOS3_2OrGreater
+{
+	// Here's a cheap way to test for 3.2; does it respond to a selector that was introduced with that version?
+	return [[UIApplication sharedApplication] respondsToSelector:@selector(setStatusBarHidden:withAnimation:)];
 }
 
 +(BOOL)isIPad
 {
-	return [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
+	if ([TiUtils isiPhoneOS3_2OrGreater]) {
+		return UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad;
+	}
+#endif
+	return NO;
 }
 
 +(BOOL)isIPhone4
 {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	static bool iphone_checked = NO;
 	static bool iphone4 = NO;
 	if (iphone_checked==NO)
@@ -141,6 +157,8 @@ static void getAddrInternal(char* macAddress, const char* ifName) {
 		}
 	}
 	return iphone4;
+#endif
+	return NO;
 }
 
 +(void)queueAnalytics:(NSString*)type name:(NSString*)name data:(NSDictionary*)data
@@ -346,38 +364,6 @@ static void getAddrInternal(char* macAddress, const char* ifName) {
 	return CGPointMake(0,0);
 }
 
-+(CGPoint)pointValue:(id)value valid:(BOOL*)isValid
-{
-	if ([value isKindOfClass:[TiPoint class]]) {
-        if (isValid) {
-            *isValid = YES;
-        }
-		return [value point];
-	} else if ([value isKindOfClass:[NSDictionary class]]) {
-        id xVal = [value objectForKey:@"x"];
-        id yVal = [value objectForKey:@"y"];
-        if (xVal && yVal) {
-            if (![xVal respondsToSelector:@selector(floatValue)] ||
-                ![yVal respondsToSelector:@selector(floatValue)]) 
-            {
-                if (isValid) {
-                    *isValid = NO;
-                }
-                return CGPointMake(0.0, 0.0);
-            }
-            
-            if (isValid) {
-                *isValid = YES;
-            }
-            return CGPointMake([xVal floatValue], [yVal floatValue]);
-        }
-	}
-    if (isValid) {
-        *isValid = NO;
-    }
-	return CGPointMake(0,0);
-}
-
 +(CGPoint)pointValue:(id)value bounds:(CGRect)bounds defaultOffset:(CGPoint)defaultOffset;
 {
 	TiDimension xDimension;
@@ -499,9 +485,6 @@ static void getAddrInternal(char* macAddress, const char* ifName) {
 			return @"auto";
 		case TiDimensionTypePixels:
 			return [NSNumber numberWithFloat:dimension.value];
-		default: {
-			break;
-		}
 	}
 	return nil;
 }
@@ -634,7 +617,7 @@ If the new path starts with / and the base url is app://..., we have to massage 
 
 
 */
-	if((relativeString == nil) || ((void*)relativeString == (void*)[NSNull null]))
+	if((relativeString == nil) || (relativeString == [NSNull null]))
 	{
 		return nil;
 	}
@@ -1137,14 +1120,13 @@ If the new path starts with / and the base url is app://..., we have to massage 
 				id lineNumber = [arg objectForKey:@"line"];
 				return [NSString stringWithFormat:@"%@ at %@ (line %@)",message,[source lastPathComponent],lineNumber];
 			}
-            return [NSString stringWithFormat:@"%@ (unknown file)", message];
 		}
 	}
 	return arg;
 }
 
 #define RETURN_IF_ORIENTATION_STRING(str,orientation) \
-if ([str isEqualToString:@#orientation]) return (UIDeviceOrientation)orientation;
+if ([str isEqualToString:@#orientation]) return orientation;
 
 +(UIDeviceOrientation)orientationValue:(id)value def:(UIDeviceOrientation)def
 {
@@ -1156,7 +1138,7 @@ if ([str isEqualToString:@#orientation]) return (UIDeviceOrientation)orientation
 		}
 		if ([value isEqualToString:@"landscape"])
 		{
-			return (UIDeviceOrientation)UIInterfaceOrientationLandscapeRight;
+			return UIInterfaceOrientationLandscapeRight;
 		}
 		
 		RETURN_IF_ORIENTATION_STRING(value,UIInterfaceOrientationPortrait)
@@ -1188,11 +1170,11 @@ if ([str isEqualToString:@#orientation]) return (UIDeviceOrientation)orientation
 //	TODO: A previous bug was DeviceOrientationUnknown == 0, which is always true. Uncomment this when pushing.
 	if (UIDeviceOrientationUnknown == orient) 
 	{
-		return (UIInterfaceOrientation)UIDeviceOrientationPortrait;
+		return UIDeviceOrientationPortrait;
 	} 
 	else 
 	{
-		return (UIInterfaceOrientation)orient;
+		return orient;
 	}
 }
 
@@ -1647,29 +1629,4 @@ if ([str isEqualToString:@#orientation]) return (UIDeviceOrientation)orientation
     NSString* uid = [TiUtils oldUUID];
     return uid;
 }
-
-// In pre-iOS 5, it looks like response headers were mangled to be case-correct
-// (i.e. WWW-Authenticate became Www-Authenticate). So we have to perform
-// our own case correction to get the RIGHT header back.
-//
-// Note that we assume that Apple mangles all 'xxx-xxx' headers like this.
-
-+(NSString*)caseCorrect:(NSString *)str
-{
-    if (![TiUtils isIOS5OrGreater]) {
-        if ([str rangeOfString:@"-"].location != NSNotFound) {
-            NSArray* substrings = [str componentsSeparatedByString:@"-"];
-            NSMutableString* header = [NSMutableString stringWithString:[[substrings objectAtIndex:0] capitalizedString]];
-            for (int i=1; i < [substrings count]; i++) {
-                NSString* substr = [substrings objectAtIndex:i];
-                [(NSMutableString*)header appendFormat:@"-%@",[substr capitalizedString]];
-            }
-            
-            return header;
-        }
-    }
-    
-    return str;
-}
-
 @end

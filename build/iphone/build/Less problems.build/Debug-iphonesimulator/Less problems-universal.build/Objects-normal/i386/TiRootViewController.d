@@ -41,4 +41,5 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Bridge.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiStylesheet.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/KrollBridge.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/XHRBridge.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/XHRBridge.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/UIImage+Resize.h

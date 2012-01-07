@@ -57,7 +57,6 @@
 	[button release];
 	[closeButton release];
 	[badge release];
-	[item release];
 	item = nil;
 	[super dealloc];
 }

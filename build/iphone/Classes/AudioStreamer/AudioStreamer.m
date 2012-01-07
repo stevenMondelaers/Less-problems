@@ -52,7 +52,12 @@ NSString * const AS_AUDIO_BUFFER_TOO_SMALL_STRING = @"Audio packets are larger t
 	self = [super init];
 	if (self != nil)
 	{
-		streamer = [[AudioStreamerCUR alloc] initWithURL:aURL];
+		if (![TiUtils isiPhoneOS3_2OrGreater]) {
+			streamer = [[AudioStreamerBC alloc] initWithURL:aURL];
+		}
+		else {
+			streamer = [[AudioStreamerCUR alloc] initWithURL:aURL];
+		}
 		[streamer setDelegate:self];
 	}
 	return self;

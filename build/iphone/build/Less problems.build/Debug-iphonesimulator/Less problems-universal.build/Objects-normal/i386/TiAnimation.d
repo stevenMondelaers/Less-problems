@@ -27,10 +27,7 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/LayoutConstraint.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Ti2DMatrix.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOS3DMatrix.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSAdViewProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIViewProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Ti3DMatrix.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIView.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiGradient.h

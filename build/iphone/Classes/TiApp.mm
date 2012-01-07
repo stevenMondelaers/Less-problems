@@ -21,10 +21,6 @@
 #import "ApplicationDefaults.h"
 #import <libkern/OSAtomic.h>
 
-#ifdef KROLL_COVERAGE
-# import "KrollCoverage.h"
-#endif
-
 TiApp* sharedApp;
 
 int TiDebugPort = 2525;
@@ -92,21 +88,11 @@ void MyUncaughtExceptionHandler(NSException *exception)
 	insideException=NO;
 }
 
-BOOL applicationInMemoryPanic = NO;
-
-TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run on main thread, or else there is a risk of deadlock!
-
 @interface TiApp()
 -(void)checkBackgroundServices;
 @end
 
 @implementation TiApp
-
-
--(void)clearMemoryPanic
-{
-    applicationInMemoryPanic = NO;
-}
 
 @synthesize window, remoteNotificationDelegate, controller;
 
@@ -170,8 +156,14 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 	// attach our main view controller
 	controller = [[TiRootViewController alloc] init];
 	
-	// attach our main view controller... IF we haven't already loaded the main window.
-	[window setRootViewController:controller];
+	if([window respondsToSelector:@selector(setRootViewController:)])
+	{
+		[window setRootViewController:controller];		
+	}
+	else
+	{
+		[window addSubview:[controller view]];
+	}
     [window makeKeyAndVisible];
 }
 
@@ -199,7 +191,7 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 
 - (void)boot
 {
-	NSLog(@"[INFO] %@/%@ (%s.fbdc96f)",TI_APPLICATION_NAME,TI_APPLICATION_VERSION,TI_VERSION_STR);
+	NSLog(@"[INFO] %@/%@ (%s.ab20af7)",TI_APPLICATION_NAME,TI_APPLICATION_VERSION,TI_VERSION_STR);
 	
 	sessionId = [[TiUtils createUUID] retain];
 	TITANIUM_VERSION = [[NSString stringWithCString:TI_VERSION_STR encoding:NSUTF8StringEncoding] retain];
@@ -214,13 +206,17 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
             [self setDebugMode:YES];
             TiDebuggerStart(host,[port intValue]);
         }
-        [params release];
     }
 	
 	kjsBridge = [[KrollBridge alloc] initWithHost:self];
 	
 	[kjsBridge boot:self url:nil preload:nil];
-	[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([TiUtils isIOS4OrGreater])
+	{
+		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+	}
+#endif
 }
 
 - (void)validator
@@ -311,7 +307,6 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 {
 	[launchOptions removeObjectForKey:UIApplicationLaunchOptionsURLKey];	
 	[launchOptions setObject:[url absoluteString] forKey:@"url"];
-    return YES;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -327,9 +322,6 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 	[xhrBridge shutdown:nil];
 #endif	
 
-#ifdef KROLL_COVERAGE
-	[KrollCoverageObject releaseCoverage];
-#endif
 	//These shutdowns return immediately, yes, but the main will still run the close that's in their queue.	
 	[kjsBridge shutdown:condition];
 
@@ -356,13 +348,11 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
-    applicationInMemoryPanic = YES;
 	[Webcolor flushCache];
 	// don't worry about KrollBridge since he's already listening
 #ifdef USE_TI_UIWEBVIEW
 	[xhrBridge gc];
 #endif 
-    [self performSelector:@selector(clearMemoryPanic) withObject:nil afterDelay:0.0];
 }
 
 -(void)applicationWillResignActive:(UIApplication *)application
@@ -393,6 +383,7 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 {
 	[TiUtils queueAnalytics:@"ti.background" name:@"ti.background" data:nil];
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	
 	if (backgroundServices==nil)
 	{
@@ -418,6 +409,7 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
         // Do the work associated with the task.
 		[tiapp beginBackgrounding];
     });
+#endif	
 	
 }
 
@@ -426,6 +418,7 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 	[[NSNotificationCenter defaultCenter] postNotificationName:kTiResumeNotification object:self];
 	
 	[TiUtils queueAnalytics:@"ti.foreground" name:@"ti.foreground" data:nil];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	
 	if (backgroundServices==nil)
 	{
@@ -433,6 +426,8 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 	}
 	
 	[self endBackgrounding];
+	
+#endif
 
 }
 
@@ -561,13 +556,9 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 -(void)hideModalController:(UIViewController*)modalController animated:(BOOL)animated
 {
 	UIViewController *navController = [modalController parentViewController];
-
-	//	As of iOS 5, Apple is phasing out the modal concept in exchange for
-	//	'presenting', making all non-Ti modal view controllers claim to have
-	//	no parent view controller.
-	if (navController==nil && [modalController respondsToSelector:@selector(presentingViewController)])
+	if (navController==nil)
 	{
-		navController = [modalController presentingViewController];
+//		navController = [controller currentNavController];
 	}
 	[controller windowClosed:modalController];
 	if (navController!=nil)
@@ -597,8 +588,10 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
     if ([self debugMode]) {
         TiDebuggerStop();
     }
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	RELEASE_TO_NIL(backgroundServices);
 	RELEASE_TO_NIL(localNotification);
+#endif	
 	[super dealloc];
 }
 
@@ -629,6 +622,8 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 {
 	return kjsBridge;
 }
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 
 #pragma mark Backgrounding
 
@@ -706,5 +701,7 @@ TI_INLINE void waitForMemoryPanicCleared();   //WARNING: This must never be run 
 	[backgroundServices removeObject:proxy];
 	[self checkBackgroundServices];
 }
+
+#endif
 
 @end

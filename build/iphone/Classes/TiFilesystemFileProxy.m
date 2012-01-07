@@ -7,9 +7,7 @@
  * WARNING: This is generated code. Modify at your own risk and without support.
  */
 
-#if defined(USE_TI_FILESYSTEM) || defined(USE_TI_DATABASE)
-
-#include <sys/xattr.h>
+#ifdef USE_TI_FILESYSTEM
 
 #import "TiUtils.h"
 #import "TiBlob.h"
@@ -18,8 +16,6 @@
 
 #define FILE_TOSTR(x) \
 	([x isKindOfClass:[TiFilesystemFileProxy class]]) ? [(TiFilesystemFileProxy*)x nativePath] : [TiUtils stringValue:x]
-
-static const char* backupAttr = "com.apple.MobileBackup";
 
 @implementation TiFilesystemFileProxy
 
@@ -36,7 +32,6 @@ static const char* backupAttr = "com.apple.MobileBackup";
 -(void)dealloc
 {
 	RELEASE_TO_NIL(fm);
-    RELEASE_TO_NIL(path);
 	[super dealloc];
 }
 
@@ -180,7 +175,7 @@ FILENOOP(setHidden:(id)x);
 			[fm createDirectoryAtPath:[path stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:nil];
 			//We don't care if this fails.
 		}
-		result = [[NSData data] writeToFile:path options:NSDataWritingFileProtectionComplete error:nil];
+		result = [[NSData data] writeToFile:path options:0 error:nil];
 	}			
 	return NUMBOOL(result);
 }
@@ -313,7 +308,7 @@ FILENOOP(setHidden:(id)x);
 		if(![fm fileExistsAtPath:path]) {
 			//create the file if it doesn't exist already
 			NSError *writeError = nil;
-			[data writeToFile:path options:NSDataWritingFileProtectionComplete | NSDataWritingAtomic error:&writeError];
+			[data writeToFile:path options:NSDataWritingAtomic error:&writeError];
 			if(writeError != nil) {
 				NSLog(@"[ERROR] Could not write data to file at path \"%@\"", path);
 			}
@@ -373,10 +368,9 @@ FILENOOP(setHidden:(id)x);
 		}
 		return NUMBOOL(error==nil);
 	}
-    NSString* dataString = [TiUtils stringValue:arg];
-    NSData* data = [dataString dataUsingEncoding:NSUTF8StringEncoding];
+	NSString *data = [TiUtils stringValue:arg];
 	NSError *err = nil;
-    [data writeToFile:path options:NSDataWritingFileProtectionComplete | NSDataWritingAtomic error:&err];
+	[data writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:&err];
 	if(err != nil) {
 		NSLog(@"[ERROR] Could not write data to file at path \"%@\" - details: %@", path, err);
 	}
@@ -438,7 +432,7 @@ FILENOOP(setHidden:(id)x);
 	} 
 	else 
 	{
-		[[NSData data] writeToFile:resultPath options:NSDataWritingFileProtectionComplete error:&error];
+		[[NSData data] writeToFile:resultPath options:0 error:&error];
 	}
 	
 	if (error != nil)
@@ -448,38 +442,6 @@ FILENOOP(setHidden:(id)x);
 	}
 	
 	return [[[TiFilesystemFileProxy alloc] initWithFile:resultPath] autorelease];
-}
-
--(NSNumber*)remoteBackup
-{
-    u_int8_t value;
-    const char* fullPath = [[self path] fileSystemRepresentation];
-    
-    int result = getxattr(fullPath, backupAttr, &value, sizeof(value), 0, 0);
-    if (result == -1) {
-        // Doesn't matter what errno is set to; this means that we're backing up.
-        return [NSNumber numberWithBool:YES];
-    }
-
-    // A value of 0 means backup, so:
-    return [NSNumber numberWithBool:!value];
-}
-
--(void)setRemoteBackup:(NSNumber *)remoteBackup
-{
-    // Value of 1 means nobackup
-    u_int8_t value = ![TiUtils boolValue:remoteBackup def:YES];
-    const char* fullPath = [[self path] fileSystemRepresentation];
-    
-    int result = setxattr(fullPath, backupAttr, &value, sizeof(value), 0, 0);
-    if (result != 0) {
-        // Throw an exception with the errno
-        char* errmsg = strerror(errno);
-        [self throwException:@"Error setting remote backup flag:" 
-                   subreason:[NSString stringWithUTF8String:errmsg] 
-                    location:CODELOCATION];
-        return;
-    }
 }
 
 @end

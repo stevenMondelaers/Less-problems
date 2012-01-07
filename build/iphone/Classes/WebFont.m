@@ -191,7 +191,7 @@
 	id familyObject = [fontDict objectForKey:@"fontFamily"];
 	if ([familyObject isKindOfClass:[NSString class]])
 	{
-        // Expedient fix for compatibility with Android.  Apparently this is OK.
+        // HACK FOR COMPATBILITY WITH ANDROID - APPRENTLY THIS IS OK.
         if ([familyObject isEqual:@"monospace"] || [familyObject isEqual:@"monospaced"]) {
             self.family = @"Courier";
         }

@@ -13,25 +13,21 @@
 #import "TiUtils.h"
 #import "TiBuffer.h"
 
-#ifdef KROLL_COVERAGE
-# include "KrollCoverage.h"
-#endif
-
 @implementation TopTiModule
 
 -(id)version
 {
-	return @"1.8.0.1";
+	return @"1.7.5";
 }
 
 -(id)buildDate
 {
-	return @"12/22/11 13:09";
+	return @"11/02/11 17:00";
 }
 
 -(id)buildHash
 {
-	return @"fbdc96f";
+	return @"ab20af7";
 }
 
 +(BOOL)shouldRegisterOnInit
@@ -116,7 +112,7 @@
         // Just put the string data directly into the buffer, if we can.
         if (!hasLength){
             NSStringEncoding encoding = [TiUtils charsetToEncoding:charset];
-            [buffer setData:[NSMutableData dataWithData:[data dataUsingEncoding:encoding]]];
+            [buffer setData:[data dataUsingEncoding:encoding]];
         }
         else {
             switch ([TiUtils encodeString:data toBuffer:buffer charset:charset offset:0 sourceOffset:0 length:encodeLength]) {
@@ -147,7 +143,6 @@
         }
         
         byteOrder = (hasByteOrder) ? byteOrder : CFByteOrderGetCurrent();
-        [buffer setByteOrder:[NSNumber numberWithInt:byteOrder]];
         switch ([TiUtils encodeNumber:data toBuffer:buffer offset:0 type:type endianness:byteOrder]) {
             case BAD_ENDIAN: {
                 [self throwException:[NSString stringWithFormat:@"Invalid endianness: %d", byteOrder]
@@ -183,16 +178,6 @@
     }
     
     return buffer;
-}
-
--(NSDictionary*)dumpCoverage:(id)unused_
-{
-#ifdef KROLL_COVERAGE
-    NSDictionary* coverage = [KrollCoverageObject dumpCoverage];
-    return coverage;
-#else
-    return [NSDictionary dictionary];
-#endif
 }
 
 @end

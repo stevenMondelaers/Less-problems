@@ -15,14 +15,4 @@ dependencies: \
   headers/TiCore/TiStringRef.h headers/TiCore/TiStringRefCF.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/headers/TiCore/TiContextRefPrivate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/KrollCallback.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/KrollObject.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/MediaModule.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiModule.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUtils.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiColor.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiDimension.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/WebFont.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFile.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBuffer.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiMediaAudioSession.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiMediaMusicPlayer.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/KrollObject.h

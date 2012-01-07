@@ -24,22 +24,4 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/WebFont.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFile.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBuffer.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiApp.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiHost.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiStylesheet.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/XHRBridge.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiRootViewController.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiRootController.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiWindowProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIView.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiAnimation.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiPoint.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ListenerEntry.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/LayoutConstraint.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiGradient.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiTab.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiTabGroup.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIWindow.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewController.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h

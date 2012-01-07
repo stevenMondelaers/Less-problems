@@ -28,6 +28,7 @@
 #endif
 
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 
 @interface TiUIiPadProxy : TiProxy {
 
@@ -56,5 +57,7 @@
 
 @end
 
+
+#endif
 
 #endif

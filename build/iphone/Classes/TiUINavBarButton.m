@@ -20,7 +20,6 @@
 #define NAVBAR_MEMORY_DEBUG 0
 
 @implementation TiUINavBarButton
-@synthesize proxy;
 
 DEFINE_EXCEPTIONS
 

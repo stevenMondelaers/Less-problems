@@ -13,6 +13,12 @@
 
 @implementation TiUIActivityIndicatorProxy
 
+-(TiUIView*)newView
+{
+	TiUIActivityIndicator * result = [[TiUIActivityIndicator alloc] init];
+	return result;
+}
+
 -(NSMutableDictionary*)langConversionTable
 {
     return [NSMutableDictionary dictionaryWithObject:@"message" forKey:@"messageid"];

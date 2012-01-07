@@ -30,6 +30,7 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/LayoutConstraint.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiGradient.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiMapAnnotationProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiMapPinAnnotationView.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiMapImageAnnotationView.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiMapImageAnnotationView.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiMapRouteAnnotation.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiMapRouteAnnotationView.h

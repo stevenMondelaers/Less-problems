@@ -15,14 +15,8 @@
 #import "KrollContext.h"
 #import "KrollObject.h"
 #import "TiModule.h"
-#include <libkern/OSAtomic.h>
 
-#ifdef KROLL_COVERAGE
-# import "KrollCoverage.h"
-@interface LessproblemsObject : KrollCoverageObject {
-#else
 @interface LessproblemsObject : KrollObject {
-#endif
 @private
 	NSMutableDictionary *modules;
 	TiHost *host;
@@ -35,7 +29,6 @@
 -(TiModule*)moduleNamed:(NSString*)name context:(id<TiEvaluator>)context;
 @end
 
-extern NSString * Lessproblems$ModuleRequireFormat;
 
 @interface KrollBridge : Bridge<TiEvaluator,KrollDelegate> {
 @private
@@ -47,11 +40,12 @@ extern NSString * Lessproblems$ModuleRequireFormat;
 	LessproblemsObject *_lessproblems;
 	BOOL shutdown;
     BOOL evaluationError;
+	NSMutableArray *proxies;
 	//NOTE: Do NOT treat registeredProxies like a mutableDictionary; mutable dictionaries copy keys,
 	//CFMutableDictionaryRefs only retain keys, which lets them work with proxies properly.
 	CFMutableDictionaryRef registeredProxies;
 	NSCondition *shutdownCondition;
-	OSSpinLock proxyLock;
+	NSRecursiveLock *proxyLock;
 }
 - (void)boot:(id)callback url:(NSURL*)url_ preload:(NSDictionary*)preload_;
 - (void)evalJSWithoutResult:(NSString*)code;
@@ -62,6 +56,7 @@ extern NSString * Lessproblems$ModuleRequireFormat;
 - (KrollContext*)krollContext;
 
 + (NSArray *)krollBridgesUsingProxy:(id)proxy;
++ (int)countOfKrollBridgesUsingProxy:(id)proxy;
 + (BOOL)krollBridgeExists:(KrollBridge *)bridge;
 + (KrollBridge *)krollBridgeForThreadName:(NSString *)threadName;
 

@@ -46,11 +46,6 @@
 	[(UITextView *)[self textWidgetView] setEditable:[TiUtils boolValue:value]];
 }
 
--(void)setScrollable_:(id)value
-{
-	[(UITextView *)[self textWidgetView] setScrollEnabled:[TiUtils boolValue:value]];
-}
-
 -(void)setEditable_:(id)editable
 {
 	[(UITextView *)[self textWidgetView] setEditable:[TiUtils boolValue:editable]];

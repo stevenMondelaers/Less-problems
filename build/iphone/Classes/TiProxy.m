@@ -19,8 +19,6 @@
 #import "TiComplexValue.h"
 #import "TiViewProxy.h"
 
-#include <libkern/OSAtomic.h>
-
 //Common exceptions to throw when the function call was improper
 NSString * const TiExceptionInvalidType = @"Invalid type passed to function";
 NSString * const TiExceptionNotEnoughArguments = @"Invalid number of arguments to function";
@@ -210,6 +208,8 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 #if PROXY_MEMORY_TRACK == 1
 		NSLog(@"INIT: %@ (%d)",self,[self hash]);
 #endif
+		pageContext = nil;
+		executionContext = nil;
 		pthread_rwlock_init(&listenerLock, NULL);
 		pthread_rwlock_init(&dynpropsLock, NULL);
 	}
@@ -238,45 +238,16 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 
 -(void)setModelDelegate:(id <TiProxyDelegate>)md
 {
-	// TODO; revisit modelDelegate/TiProxy typing issue
-    if ((void*)modelDelegate != self) {
+    if (modelDelegate != self) {
         RELEASE_TO_NIL(modelDelegate);
     }
     
-    if ((void*)md != self) {
+    if (md != self) {
         modelDelegate = [md retain];
     }
     else {
         modelDelegate = md;
     }
-}
-
-/*
- *	Currently, Binding/unbinding bridges does nearly nothing but atomically
- *	increment or decrement. In the future, error checking could be done, or
- *	when unbinding from the pageContext, to clear it. This might also be a
- *	replacement for contextShutdown and friends, as contextShutdown is
- *	called ONLY when a proxy is still registered with a context as it
- *	is shutting down.
- */
-
--(void)boundBridge:(id<TiEvaluator>)newBridge withKrollObject:(KrollObject *)newKrollObject
-{
-	OSAtomicIncrement32(&bridgeCount);
-	if (newBridge == pageContext) {
-		pageKrollObject = newKrollObject;
-	}
-}
-
--(void)unboundBridge:(id<TiEvaluator>)oldBridge
-{
-	if(OSAtomicDecrement32(&bridgeCount)<0)
-	{
-		NSLog(@"[FATAL] BridgeCount for %@ is now at %d",self,bridgeCount);
-	}
-	if(oldBridge == pageContext) {
-		pageKrollObject = nil;
-	}
 }
 
 -(void)contextWasShutdown:(id<TiEvaluator>)context
@@ -294,7 +265,6 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 		//it's no longer referenced by any contexts at all.
 		[self _destroy];
 		pageContext = nil;
-		pageKrollObject = nil;
 	}
 }
 
@@ -310,13 +280,6 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 	// paths, etc. so that the proper context can be contextualized which is different
 	// than the owning context (page context).
 	//
-	
-	/*
-	 *	In theory, if two contexts are both using the proxy at the same time,
-	 *	bad things could happen since this value will be overwritten.
-	 *	TODO: Investigate thread safety of this, or to moot it.
-	 */
-	
 	executionContext = context; //don't retain
 }
 
@@ -351,7 +314,14 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 			[self _initWithCallback:[args objectAtIndex:1]];
 		}
 		
-		[self _initWithProperties:a];
+		if (![NSThread isMainThread] && [self _propertyInitRequiresUIThread])
+		{
+			[self performSelectorOnMainThread:@selector(_initWithProperties:) withObject:a waitUntilDone:NO];
+		}		
+		else 
+		{
+			[self _initWithProperties:a];
+		}
 	}
 	return self;
 }
@@ -369,17 +339,10 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 	NSLog(@"DESTROY: %@ (%d)",self,[self hash]);
 #endif
 
-	if ((bridgeCount == 1) && (pageKrollObject != nil) && (pageContext != nil))
+	NSArray * pageContexts = [KrollBridge krollBridgesUsingProxy:self];
+	for (id thisPageContext in pageContexts)
 	{
-		[pageContext unregisterProxy:self];
-	}
-	else if (bridgeCount > 1)
-	{
-		NSArray * pageContexts = [KrollBridge krollBridgesUsingProxy:self];
-		for (id thisPageContext in pageContexts)
-		{
-			[thisPageContext unregisterProxy:self];
-		}		
+		[thisPageContext unregisterProxy:self];
 	}
 	
 	if (executionContext!=nil)
@@ -396,13 +359,13 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 	RELEASE_TO_NIL(dynprops);
 	pthread_rwlock_unlock(&dynpropsLock);
 	
+	RELEASE_TO_NIL(listeners);
 	RELEASE_TO_NIL(baseURL);
 	RELEASE_TO_NIL(krollDescription);
-    if ((void*)modelDelegate != self) {
+    if (modelDelegate != self) {
         RELEASE_TO_NIL(modelDelegate);
     }
 	pageContext=nil;
-	pageKrollObject = nil;
 }
 
 -(BOOL)destroyed
@@ -418,13 +381,6 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 	[self _destroy];
 	pthread_rwlock_destroy(&listenerLock);
 	pthread_rwlock_destroy(&dynpropsLock);
-/*
-	//BridgeCount will be 1 on TopTiModule and TiUIWindow, so we should not
-	//Warn of this just yet.
-	if (bridgeCount > 0) {
-		NSLog(@"[FATAL] BridgeCount of %@ is %d during dealloc.",self,bridgeCount);
-	}
-*/
 	[super dealloc];
 }
 
@@ -570,33 +526,13 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 	return nil;
 }
 
--(KrollObject *)krollObjectForBridge:(KrollBridge *)bridge
-{
-	if ((pageContext == bridge) && (pageKrollObject != NULL))
-	{
-		return pageKrollObject;
-	}
-		
-	if(![bridge usesProxy:self])
-	{
-		NSLog(@"[ERROR] Adding an event listener to a proxy that isn't already in the context");
-	}
-	
-	return [bridge krollObjectForProxy:self];
-}
-
 -(KrollObject *)krollObjectForContext:(KrollContext *)context
 {
-	if ([pageKrollObject context] == context)
-	{
-		return pageKrollObject;
-	}
-
 	KrollBridge * ourBridge = (KrollBridge *)[context delegate];
-	
+
 	if(![ourBridge usesProxy:self])
 	{
-		NSLog(@"[ERROR] Adding an event listener to a proxy that isn't already in the context");
+		NSLog(@"[ERROR] Adding an event listener to a proxy that isn't already in the context!!!");
 	}
 
 	return [ourBridge krollObjectForProxy:self];
@@ -609,25 +545,6 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 
 -(void)rememberProxy:(TiProxy *)rememberedProxy
 {
-	if (rememberedProxy == nil)
-	{
-		return;
-	}
-	if ((bridgeCount == 1) && (pageKrollObject != nil))
-	{
-		if (rememberedProxy == self) {
-			[pageKrollObject protectJsobject];
-			return;
-		}
-		[pageKrollObject noteKeylessKrollObject:[rememberedProxy krollObjectForBridge:(KrollBridge*)pageContext]];
-		return;
-	}
-	if (bridgeCount < 1)
-	{
-		NSLog(@"[DEBUG] Orphaned %@ is trying to remember %@.",self,rememberedProxy);
-		return;
-	}
-	
 	for (KrollBridge * thisBridge in [KrollBridge krollBridgesUsingProxy:self])
 	{
 		if(rememberedProxy == self)
@@ -648,25 +565,6 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 
 -(void)forgetProxy:(TiProxy *)forgottenProxy
 {
-	if (forgottenProxy == nil)
-	{
-		return;
-	}
-	if ((bridgeCount == 1) && (pageKrollObject != nil))
-	{
-		if (forgottenProxy == self) {
-			[pageKrollObject unprotectJsobject];
-			return;
-		}
-		[pageKrollObject forgetKeylessKrollObject:[forgottenProxy krollObjectForBridge:(KrollBridge*)pageContext]];
-		return;
-	}
-	if (bridgeCount < 1)
-	{
-		NSLog(@"[DEBUG] Orphaned %@ is trying to forget %@.",self,forgottenProxy);
-		return;
-	}
-
 	for (KrollBridge * thisBridge in [KrollBridge krollBridgesUsingProxy:self])
 	{
 		if(forgottenProxy == self)
@@ -697,19 +595,7 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 -(void)setCallback:(KrollCallback *)eventCallback forKey:(NSString *)key
 {
 	BOOL isCallback = [eventCallback isKindOfClass:[KrollCallback class]]; //Also check against nil.
-	if ((bridgeCount == 1) && (pageKrollObject != nil)) {
-		if (!isCallback || ([eventCallback context] != [pageKrollObject context]))
-		{
-			[pageKrollObject forgetCallbackForKey:key];
-		}
-		else
-		{
-			[pageKrollObject noteCallback:eventCallback forKey:key];
-		}
-		return;
-	}
-
-	KrollBridge * blessedBridge = (KrollBridge*)[[eventCallback context] delegate];
+	KrollBridge * blessedBridge = [[eventCallback context] delegate];
 	NSArray * bridges = [KrollBridge krollBridgesUsingProxy:self];
 
 	for (KrollBridge * currentBridge in bridges)
@@ -735,12 +621,6 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 		[eventObject addEntriesFromDictionary:argDict];
 	}
 
-	if ((bridgeCount == 1) && (pageKrollObject != nil)) {
-		[pageKrollObject invokeCallbackForKey:type withObject:eventObject thisObject:source];
-		return;
-	}
-	
-	
 	NSArray * bridges = [KrollBridge krollBridgesUsingProxy:self];
 	for (KrollBridge * currentBridge in bridges)
 	{
@@ -849,19 +729,11 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 	}
 
 	//Since listeners are now at the object level, we have to wait in line.
+	NSArray * bridges = [KrollBridge krollBridgesUsingProxy:self];
 
-	if ((bridgeCount == 1) && (pageKrollObject != nil))
+	for (KrollBridge * currentBridge in bridges)
 	{
-		[(KrollBridge *)pageContext enqueueEvent:type forProxy:self withObject:eventObject withSource:source];
-	}
-	else
-	{
-		NSArray * bridges = [KrollBridge krollBridgesUsingProxy:self];
-
-		for (KrollBridge * currentBridge in bridges)
-		{
-			[currentBridge enqueueEvent:type forProxy:self withObject:eventObject withSource:source];
-		}
+		[currentBridge enqueueEvent:type forProxy:self withObject:eventObject withSource:source];
 	}
 }
 
@@ -869,33 +741,20 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
 {
 	//It's possible that the 'setvalueforkey' has its own plans of what should be in the JS object,
 	//so we should do this first as to not overwrite the subclass's setter.
-	if ((bridgeCount == 1) && (pageKrollObject != nil)) {
+	for (KrollBridge * currentBridge in [KrollBridge krollBridgesUsingProxy:self])
+	{
+		KrollObject * currentKrollObject = [currentBridge krollObjectForProxy:self];
 		for (NSString * currentKey in keyedValues)
 		{
 			id currentValue = [keyedValues objectForKey:currentKey];
-			if([currentValue isKindOfClass:[TiProxy class]] && [pageContext usesProxy:currentValue])
+
+			if([currentValue isKindOfClass:[TiProxy class]] && [currentBridge usesProxy:currentValue])
 			{
-				[pageKrollObject noteKrollObject:[currentValue krollObjectForBridge:(KrollBridge*)pageContext] forKey:currentKey];
+				[currentKrollObject noteKrollObject:[currentBridge krollObjectForProxy:currentValue] forKey:currentKey];
 			}
 		}
 	}
-	else
-	{
-		for (KrollBridge * currentBridge in [KrollBridge krollBridgesUsingProxy:self])
-		{
-			KrollObject * currentKrollObject = [currentBridge krollObjectForProxy:self];
-			for (NSString * currentKey in keyedValues)
-			{
-				id currentValue = [keyedValues objectForKey:currentKey];
-				
-				if([currentValue isKindOfClass:[TiProxy class]] && [currentBridge usesProxy:currentValue])
-				{
-					[currentKrollObject noteKrollObject:[currentBridge krollObjectForProxy:currentValue] forKey:currentKey];
-				}
-			}
-		}
-	}
-	
+
 	NSArray * keySequence = [self keySequence];
 
 	for (NSString * thisKey in keySequence)
@@ -934,6 +793,13 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> * target
  
 DEFINE_EXCEPTIONS
 
+
+-(BOOL)_propertyInitRequiresUIThread
+{
+	// tell our constructor not to place _initWithProperties on UI thread by default
+	return NO;
+}
+
 - (id) valueForUndefinedKey: (NSString *) key
 {
 	if ([key isEqualToString:@"toString"] || [key isEqualToString:@"valueOf"])
@@ -967,11 +833,6 @@ DEFINE_EXCEPTIONS
 	// used for replacing a value and controlling model delegate notifications
 	if (value==nil)
 	{
-		if (!notify && (dynprops == nil)) {
-			//Don't bother to create a dictionary if it's
-			//going to be a waste.
-			return;
-		}
 		value = [NSNull null];
 	}
 	id current = nil;
@@ -1018,11 +879,11 @@ DEFINE_EXCEPTIONS
 {
 	if([value isKindOfClass:[KrollCallback class]]){
 		[self setCallback:value forKey:key];
-		//As a wrapper, we hold onto a KrollWrapper tuple so that other contexts
+		//As a wrapper, we hold onto a krollFunction tuple so that other contexts
 		//may access the function.
-		KrollWrapper * newValue = [[[KrollWrapper alloc] init] autorelease];
-		[newValue setBridge:(KrollBridge*)[[(KrollCallback*)value context] delegate]];
-		[newValue setJsobject:[(KrollCallback*)value function]];
+		KrollFunction * newValue = [[[KrollFunction alloc] init] autorelease];
+		[newValue setRemoteBridge:[[value context] delegate]];
+		[newValue setRemoteFunction:[value function]];
 		value = newValue;
 	}
 

@@ -11,9 +11,14 @@
 #import "TiUIiPadPopover.h"
 #import "TiUtils.h"
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
+
+
 @implementation TiUIiPadPopover
 
 
 @end
+
+#endif
 
 #endif

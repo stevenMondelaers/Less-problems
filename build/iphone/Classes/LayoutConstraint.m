@@ -266,9 +266,6 @@ CGFloat WidthFromConstraintGivenWidth(LayoutConstraint * constraint, CGFloat vie
 		{
 			return constraint->width.value * viewWidth;
 		}
-		default: {
-			break;
-		}
 	}
 
 	return viewWidth - (TiDimensionCalculateValue(constraint->left, viewWidth) + TiDimensionCalculateValue(constraint->right, viewWidth));

@@ -5,18 +5,17 @@ reporting an issue to help us understand your environment, build settings
 and aid in debugging. Please attach this log to any issue that you report.
 ================================================================================
 
-Starting build at 01/05/12 19:45
+Starting build at 01/07/12 01:00
 
 Build details:
 
-   timestamp=12/22/11 13:09
-   module_apiversion=2
-   version=1.8.0.1
-   githash=fbdc96f
+   timestamp=11/02/11 17:00
+   version=1.7.5
+   githash=ab20af7
 
 
 Script arguments:
-   /Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.8.0.1/iphone/builder.py
+   /Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.7.5/iphone/builder.py
    simulator
    5.0
    /Users/Niels/Projecten GIT/Less-problems
@@ -26,16 +25,16 @@ Script arguments:
    iphone
    
 
-Building from: /Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.8.0.1/iphone
+Building from: /Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/1.7.5/iphone
 Platform: Darwin Kernel Version 11.2.0: Tue Aug  9 20:54:00 PDT 2011; root:xnu-1699.24.8~1/RELEASE_X86_64
 
 Xcode path is: /Developer
 
 
-githash=fbdc96f, existing_git_hash=fbdc96f
+githash=ab20af7, existing_git_hash=ab20af7
 writing contents of /Users/Niels/Projecten GIT/Less-problems/build/iphone/project.xcconfig:
 
-TI_VERSION=1.8.0.1
+TI_VERSION=1.7.5
 TI_SDK_DIR=/Users/Niels/Library/Application Support/Titanium/mobilesdk/osx/$(TI_VERSION)/iphone
 TI_APPID=eu.lessius.mechelen.lessproblems
 OTHER_LDFLAGS[sdk=iphoneos*]=$(inherited) -weak_framework iAd

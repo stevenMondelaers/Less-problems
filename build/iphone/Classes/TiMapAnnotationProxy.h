@@ -10,12 +10,12 @@
 
 #ifdef USE_TI_MAP
 
-#import "TiViewProxy.h"
+#import "TiProxy.h"
 #import <MapKit/MapKit.h>
 
 @class TiMapView;
 
-@interface TiMapAnnotationProxy : TiViewProxy<MKAnnotation> {
+@interface TiMapAnnotationProxy : TiProxy<MKAnnotation> {
 @private
 	int tag;
 	TiMapView *delegate;

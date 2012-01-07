@@ -13,17 +13,10 @@
 
 #import "KrollBridge.h"
 
-#ifdef KROLL_COVERAGE
-# import "KrollCoverage.h"
-#endif
-
-#import "TiApp.h"
-
 TiClassRef KrollMethodClassRef = NULL;
 
 TiValueRef KrollCallAsFunction(TiContextRef jsContext, TiObjectRef func, TiObjectRef thisObj, size_t argCount, const TiValueRef arguments[], TiValueRef* exception)
 {
-    waitForMemoryPanicCleared();
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	KrollMethod* o = (KrollMethod*) TiObjectGetPrivate(func);
 	@try
@@ -35,13 +28,7 @@ TiValueRef KrollCallAsFunction(TiContextRef jsContext, TiObjectRef func, TiObjec
 			for (size_t c=0;c<argCount;c++)
 			{
 				id value = [KrollObject toID:[o context] value:arguments[c]];
-				//TODO: This is a temprorary workaround for the time being. We have to properly take care of [undefined] objects.
-				if(value == nil){
-					[args addObject:[NSNull null]];
-				}
-				else{
-					[args addObject:value];
-				}
+				[args addObject:value];
 			}
 		}
 #if KMETHOD_DEBUG == 1
@@ -142,7 +129,7 @@ TiValueRef KrollCallAsFunction(TiContextRef jsContext, TiObjectRef func, TiObjec
 	{
 		return;
 	}
-	KrollBridge * ourBridge = (KrollBridge*)[context delegate];
+	KrollBridge * ourBridge = [context delegate];
 	KrollObject * targetKrollObject = [ourBridge krollObjectForProxy:target];
 	TiStringRef keyString = TiStringCreateWithCFString((CFStringRef) key);
 
@@ -182,19 +169,19 @@ TiValueRef KrollCallAsFunction(TiContextRef jsContext, TiObjectRef func, TiObjec
 	// special generic factory for creating proxy objects for modules
 	if (type == KrollMethodFactory)
 	{
-		//TODO: This likely could be further optimized later
-		//
 		NSMethodSignature *methodSignature = [target methodSignatureForSelector:selector];
-		bool useResult = [methodSignature methodReturnLength] == sizeof(id);
-		id result = nil;
+		NSInvocation *invoker = [NSInvocation invocationWithMethodSignature:methodSignature];
 		id delegate = context.delegate;
-		IMP methodFunction = [target methodForSelector:selector];
-		if (useResult) {
-			result = methodFunction(target,selector,args,name,delegate);
-		}
-		else
+		[invoker setSelector:selector];
+		[invoker setTarget:target];
+		[invoker setArgument:&args atIndex:2];
+		[invoker setArgument:&name atIndex:3];
+		[invoker setArgument:&delegate atIndex:4];
+		[invoker invoke];
+		id result = nil;
+		if ([methodSignature methodReturnLength] == sizeof(id)) 
 		{
-			methodFunction(target,selector,args,name,delegate);
+			[invoker getReturnValue:&result];
 		}
 		return result;
 	}
@@ -206,10 +193,11 @@ TiValueRef KrollCallAsFunction(TiContextRef jsContext, TiObjectRef func, TiObjec
 	{
 		@throw [NSException exceptionWithName:@"org.lessproblems.kroll" reason:[NSString stringWithFormat:@"invalid method '%@'",NSStringFromSelector(selector)] userInfo:nil];
 	}
-	IMP methodFunction = [target methodForSelector:selector];
-	id arg1=nil;
-	id arg2=nil;
-
+	NSInvocation *invoker = [NSInvocation invocationWithMethodSignature:methodSignature];
+	
+	[invoker setSelector:selector];
+	[invoker setTarget:target];
+	
 	if ([target conformsToProtocol:@protocol(KrollTargetable)])
 	{
 		[target setExecutionContext:context.delegate];
@@ -221,99 +209,101 @@ TiValueRef KrollCallAsFunction(TiContextRef jsContext, TiObjectRef func, TiObjec
 	{
 		if (argcount==2 && methodArgCount==4)
 		{
-			arg1 = [KrollObject nonNull:args==nil ? nil : [args objectAtIndex:0]];
-			arg2 = [KrollObject nonNull:[args count] > 1 ? [args objectAtIndex:1] : nil];
+			id arg1 = [KrollObject nonNull:args==nil ? nil : [args objectAtIndex:0]];
+			id arg2 = [KrollObject nonNull:[args count] > 1 ? [args objectAtIndex:1] : nil];
+			[invoker setArgument:&arg1 atIndex:2];
+			[invoker setArgument:&arg2 atIndex:3];
 			if (type == KrollMethodSetter)
 			{
 				[self updateJSObjectWithValue:arg1 forKey:propertyKey];
 			}
+			
 		}
 		else
 		{
 			if (type == KrollMethodDynamicProxy)
 			{
-				arg1 = name;
-				arg2 = args;
+				[invoker setArgument:&name atIndex:2];
+				[invoker setArgument:&args atIndex:3];
 			}
 			else if (type == KrollMethodSetter)
 			{
-				arg1 = [KrollObject nonNull:[args count] == 1 ? [args objectAtIndex:0] : args];
-				[self updateJSObjectWithValue:arg1 forKey:propertyKey];
+				id arg = [KrollObject nonNull:[args count] == 1 ? [args objectAtIndex:0] : args];
+				[self updateJSObjectWithValue:arg forKey:propertyKey];
+				[invoker setArgument:&arg atIndex:2];
 			}
 			else if (args!=nil)
 			{
-				arg1 = [KrollObject nonNull:args];
+				args = [KrollObject nonNull:args];
+				[invoker setArgument:&args atIndex:2];
 			}
 		}
 	}
 	
+	[invoker invoke];
+	
+	void* result = nil;
+	
 	if ([methodSignature methodReturnLength] == sizeof(id)) 
 	{
-		id result;
-		result = methodFunction(target,selector,arg1,arg2);
+		[invoker getReturnValue:&result];
 		return result;
 	}
-
-	const char * retType = [methodSignature methodReturnType];
-	char t = retType[0];
-	switch(t)
+	else 
 	{
-		case 'v':
-			methodFunction(target,selector,arg1,arg2);
-			return nil;
-		case 'c':
+		const char * retType = [methodSignature methodReturnType];
+		char t = retType[0];
+		switch(t)
 		{
-			char c;
-			typedef char (*cIMP)(id, SEL, ...);
-			c = ((cIMP)methodFunction)(target,selector,arg1,arg2);
-			return [NSNumber numberWithChar:c];
-		}
-		case 'f':
-		{
-			float f;
-			typedef float (*fIMP)(id, SEL, ...);
-			f = ((fIMP)methodFunction)(target,selector,arg1,arg2);
-			return [NSNumber numberWithFloat:f];
-		}
-		case 'i':
-		{
-			int i;
-			typedef float (*iIMP)(id, SEL, ...);
-			i = ((iIMP)methodFunction)(target,selector,arg1,arg2);
-			return [NSNumber numberWithInt:i];
-		}
-		case 'd':
-		{
-			double d;
-			typedef double (*dIMP)(id, SEL, ...);
-			d = ((dIMP)methodFunction)(target,selector,arg1,arg2);
-			return [NSNumber numberWithDouble:d];
-		}
-		case 'l':
-		{
-			long l;
-			typedef long (*lIMP)(id, SEL, ...);
-			l = ((lIMP)methodFunction)(target,selector,arg1,arg2);
-			return [NSNumber numberWithLong:l];
-		}
-		case 'q':
-		{
-			long long l;
-			typedef long long (*lIMP)(id, SEL, ...);
-			l = ((lIMP)methodFunction)(target,selector,arg1,arg2);
-			return [NSNumber numberWithLongLong:l];
-		}
-		case 'Q':
-		{
-			unsigned long long l;
-			typedef unsigned long long (*lIMP)(id, SEL, ...);
-			l = ((lIMP)methodFunction)(target,selector,arg1,arg2);
-			return [NSNumber numberWithUnsignedLongLong:l];
-		}
-		default:
-		{
-			NSLog(@"[ERROR] unknown & unsupported primitive return type: %c for target:%@->%@",t,target,NSStringFromSelector(selector));
-			break;
+			case 'v':
+				return nil;
+			case 'c':
+			{
+				char c;
+				[invoker getReturnValue:&c];
+				return [NSNumber numberWithChar:c];
+			}
+			case 'f':
+			{
+				float f;
+				[invoker getReturnValue:&f];
+				return [NSNumber numberWithFloat:f];
+			}
+			case 'i':
+			{
+				int i;
+				[invoker getReturnValue:&i];
+				return [NSNumber numberWithInt:i];
+			}
+			case 'd':
+			{
+				double d;
+				[invoker getReturnValue:&d];
+				return [NSNumber numberWithDouble:d];
+			}
+			case 'l':
+			{
+				long l;
+				[invoker getReturnValue:&l];
+				return [NSNumber numberWithLong:l];
+			}
+			case 'q':
+			{
+				long long l;
+				[invoker getReturnValue:&l];
+				return [NSNumber numberWithLongLong:l];
+			}
+			case 'Q':
+			{
+				unsigned long long l;
+				[invoker getReturnValue:&l];
+				return [NSNumber numberWithUnsignedLongLong:l];
+			}
+			default:
+			{
+				NSLog(@"[ERROR] unknown & unsupported primitive return type: %c for target:%@->%@",t,target,NSStringFromSelector(selector));
+				break;
+			}
 		}
 	}
 	

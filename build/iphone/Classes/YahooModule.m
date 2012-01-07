@@ -53,14 +53,8 @@ const NSString *apiEndpoint = @"http://query.yahooapis.com/v1/public/yql?format=
 	NSMutableDictionary *event = [NSMutableDictionary dictionary];
 	if (error==nil)
 	{
-		NSDictionary* errorDict = [result objectForKey:@"error"];
-		if (errorDict) {
-			[event setObject:NUMBOOL(NO) forKey:@"success"];
-			[event setObject:[errorDict objectForKey:@"description"] forKey:@"message"];
-		} else {
-			[event setObject:NUMBOOL(YES) forKey:@"success"];
-			[event setObject:[[result objectForKey:@"query"] objectForKey:@"results"] forKey:@"data"];
-		}
+		[event setObject:NUMBOOL(YES) forKey:@"success"];
+		[event setObject:[[result objectForKey:@"query"] objectForKey:@"results"] forKey:@"data"];
 	}
 	else
 	{

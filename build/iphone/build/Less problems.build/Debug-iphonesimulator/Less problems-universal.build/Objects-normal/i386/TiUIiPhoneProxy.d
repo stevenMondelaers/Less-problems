@@ -43,19 +43,19 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiTabGroup.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIWindow.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewController.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneAnimationStyleProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneStatusBarProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneRowAnimationStyleProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneSystemButtonStyleProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneSystemButtonProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneProgressBarStyleProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneActivityIndicatorStyleProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneSystemIconProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneScrollIndicatorStyleProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneTableViewStyleProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneTableViewSeparatorStyleProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneTableViewScrollPositionProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneTableViewCellSelectionStyleProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIAnimationStyleProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIStatusBarProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIRowAnimationStyleProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUISystemButtonStyleProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUISystemButtonProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIProgressBarStyleProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIActivityIndicatorStyleProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUISystemIconProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIScrollIndicatorStyleProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUITableViewStyleProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUITableViewSeparatorStyleProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUITableViewScrollPositionProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUITableViewCellSelectionStyleProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneNavigationGroupProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPadProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPadPopoverProxy.h \

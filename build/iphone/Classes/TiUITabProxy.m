@@ -29,8 +29,6 @@
 
 -(void)_destroy
 {
-    RELEASE_TO_NIL(closingWindows);
-    RELEASE_TO_NIL(controllerStack);
 	RELEASE_TO_NIL(tabGroup);
 	RELEASE_TO_NIL(rootController);
 	RELEASE_TO_NIL(current);
@@ -115,28 +113,16 @@
 		// check to make sure that we're not actually push a window on the stack
 		if (opening==NO && [rootController window]!=currentWindow && [TiUtils boolValue:currentWindow.opened] && currentWindow.closing==NO)
 		{
-			RELEASE_TO_NIL(closingWindows);
-            closingWindows = [[NSMutableArray alloc] init];
-            // Travel down the stack until the new viewController is reached; these are the windows
-            // which must be closed.
-            NSEnumerator* enumerator = [controllerStack reverseObjectEnumerator];
-            for (UIViewController* windowController in enumerator) {
-                if (windowController != viewController && [windowController isKindOfClass:[TiUITabController class]]) {
-                    TiWindowProxy* window = [(TiUITabController*)windowController window];
-                    [closingWindows addObject:window];
-                    [window windowWillClose];
-                }
-                else {
-                    break;
-                }
-            }
+			RELEASE_TO_NIL(closingWindow);
+			closingWindow = [currentWindow retain];
+			[closingWindow windowWillClose];
 		}
 		
 		[currentWindow _tabBlur];
 		RELEASE_TO_NIL(current);
 	}
 	
-	current = (TiUITabController*)[viewController retain];
+	current = [viewController retain];
 	
 	TiWindowProxy *newWindow = [current window];
 	
@@ -156,15 +142,11 @@
 
 - (void)handleDidShowViewController:(UIViewController *)viewController
 {
-	if (closingWindows!=nil)
+	if (closingWindow!=nil)
 	{
-        for (TiWindowProxy* closingWindow in closingWindows) {
-            [self close:[NSArray arrayWithObject:closingWindow]];
-        }
-		RELEASE_TO_NIL(closingWindows);
+		[self close:[NSArray arrayWithObject:closingWindow]];
+		RELEASE_TO_NIL(closingWindow);
 	}
-    RELEASE_TO_NIL(controllerStack);
-    controllerStack = [[[rootController navigationController] viewControllers] copy];
 }
 
 #pragma mark Delegates
@@ -172,7 +154,6 @@
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-	transitionIsAnimating = YES;
 	if (current==viewController)
 	{
 		return;
@@ -182,7 +163,6 @@
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-	transitionIsAnimating = NO;
 	[self handleDidShowViewController:viewController];
 }
 
@@ -243,11 +223,6 @@
 
 -(void)openOnUIThread:(NSArray*)args
 {
-	if (transitionIsAnimating)
-	{
-		[self performSelector:_cmd withObject:args afterDelay:0.1];
-		return;
-	}
 	TiWindowProxy *window = [args objectAtIndex:0];
 	BOOL animated = args!=nil && [args count] > 1 ? [TiUtils boolValue:@"animated" properties:[args objectAtIndex:1] def:YES] : YES;
 	TiUITabController *root = [[TiUITabController alloc] initWithProxy:window tab:self];
@@ -289,11 +264,9 @@
 	
 	// Manage the navigation controller stack
 	UINavigationController* navController = [rootController navigationController];
-	NSMutableArray* newControllerStack = [NSMutableArray arrayWithArray:[navController viewControllers]];
-	[newControllerStack removeObject:[window controller]];
-	[navController setViewControllers:newControllerStack animated:animated];
-    RELEASE_TO_NIL(controllerStack);
-    controllerStack = [newControllerStack retain];
+	NSMutableArray* controllerStack = [NSMutableArray arrayWithArray:[navController viewControllers]];
+	[controllerStack removeObject:[window controller]];
+	[navController setViewControllers:controllerStack animated:animated];
 	
 	[window retain];
 	[window _tabBlur];

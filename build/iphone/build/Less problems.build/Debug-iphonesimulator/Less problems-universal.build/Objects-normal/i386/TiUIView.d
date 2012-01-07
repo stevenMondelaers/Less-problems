@@ -34,13 +34,9 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestConfig.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIProgressDelegate.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASICacheDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASINetworkQueue.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Ti2DMatrix.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOS3DMatrix.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSAdViewProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIViewProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Ti3DMatrix.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiApp.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiHost.h \

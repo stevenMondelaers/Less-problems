@@ -56,6 +56,7 @@
 	[title release];
 	[image release];
 	[selectedImage release];
+	[userData release];
 	[view release];
 	[super dealloc];
 }

@@ -109,13 +109,12 @@
 
 -(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-    [super willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
 	[TiLayoutQueue addViewProxy:self];
 }
 
 -(void)_destroy
 {
-    if (![self closing] && [[self opened] boolValue]) {
+    if (![self closing]) {
         [self performSelectorOnMainThread:@selector(close:) withObject:nil waitUntilDone:YES];
     }
     
@@ -234,7 +233,7 @@
 		BOOL animate = args!=nil && [args count]>0 ? [TiUtils boolValue:@"animated" properties:[args objectAtIndex:0] def:YES] : YES;
 		[tab windowClosing:self animated:animate];
 	}
-	else if(focused)
+	else
 	{
 		// if we don't have a tab, we need to fire blur
 		// events ourselves
@@ -374,10 +373,9 @@
 		{
 			// detach existing one
 			UIBarButtonItem *item = controller.navigationItem.rightBarButtonItem;
-			if ([item respondsToSelector:@selector(proxy)])
+			if (item!=nil && [item isKindOfClass:[TiViewProxy class]])
 			{
-				TiViewProxy* p = (TiViewProxy*)[item performSelector:@selector(proxy)];
-				[p removeBarButtonView];
+				[(TiViewProxy*)item removeBarButtonView];
 			}
 			if (proxy!=nil)
 			{
@@ -421,10 +419,9 @@
 		{
 			// detach existing one
 			UIBarButtonItem *item = controller.navigationItem.leftBarButtonItem;
-			if ([item respondsToSelector:@selector(proxy)])
+			if (item!=nil && [item isKindOfClass:[TiViewProxy class]])
 			{
-				TiViewProxy* p = (TiViewProxy*)[item performSelector:@selector(proxy)];
-				[p removeBarButtonView];
+				[(TiViewProxy*)item removeBarButtonView];
 			}
 			controller.navigationItem.leftBarButtonItem = nil;			
 			if (proxy!=nil)
@@ -620,68 +617,70 @@
 
 -(void)setToolbar:(id)items withObject:(id)properties
 {
-	ENSURE_TYPE_OR_NIL(items,NSArray);
-	if (properties == nil)
-	{
+	ENSURE_UI_THREAD_WITH_OBJ(setToolbar,items,properties);
+    if (properties == nil) {
         properties = [self valueForKey:@"toolbarSettings"];
     }
-    else 
-	{
+    else {
         [self setValue:properties forKey:@"toolbarSettings"];
     }
-	NSArray * oldarray = [self valueForUndefinedKey:@"toolbar"];
-	if((id)oldarray == [NSNull null])
+    
+	if (controller!=nil)
 	{
-		oldarray = nil;
-	}
-	for(TiViewProxy * oldProxy in oldarray)
-	{
-		if(![items containsObject:oldProxy])
+		ENSURE_TYPE_OR_NIL(items,NSArray);
+		[self replaceValue:items forKey:@"toolbar" notification:NO];
+		
+		// detatch the current ones
+		NSArray *existing = [controller toolbarItems];
+		UINavigationController * ourNC = [controller navigationController];
+		if (existing!=nil)
 		{
-			[self forgetProxy:oldProxy];
-		}
-	}
-	for (TiViewProxy *proxy in items)
-	{
-		[self rememberProxy:proxy];
-	}
-	[self replaceValue:items forKey:@"toolbar" notification:NO];
-	TiThreadPerformOnMainThread( ^{
-		if (controller!=nil)
-		{
-			NSArray *existing = [controller toolbarItems];
-			UINavigationController * ourNC = [controller navigationController];
-			if (existing!=nil)
+			for (id current in existing)
 			{
-				for (id current in existing)
+				if ([current isKindOfClass:[TiViewProxy class]])
 				{
-					if ([current respondsToSelector:@selector(proxy)])
-					{
-						TiViewProxy* p = (TiViewProxy*)[current performSelector:@selector(proxy)];
-						[p removeBarButtonView];
-					}
+					[(TiViewProxy*)current removeBarButtonView];
 				}
 			}
-			NSMutableArray * array = [[NSMutableArray alloc] initWithObjects:nil];
+		}
+		BOOL translucent = [TiUtils boolValue:@"translucent" properties:properties def:NO];
+		if (items!=nil && [items count] > 0)
+		{
+			NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:[items count]];
 			for (TiViewProxy *proxy in items)
 			{
-				if([proxy supportsNavBarPositioning])
+				if ([proxy supportsNavBarPositioning])
 				{
+					// detach existing one
 					UIBarButtonItem *item = [proxy barButtonItem];
 					[array addObject:item];
 				}
+				else
+				{
+					NSString *msg = [NSString stringWithFormat:@"%@ doesn't support positioning on the nav bar",proxy];
+					THROW_INVALID_ARG(msg);
+				}
 			}
-			hasToolbar = (array != nil && [array count] > 0) ? YES : NO ;
-			BOOL translucent = [TiUtils boolValue:@"translucent" properties:properties def:NO];
-			BOOL animated = [TiUtils boolValue:@"animated" properties:properties def:hasToolbar];
+			BOOL animated = [TiUtils boolValue:@"animated" properties:properties def:YES];
 			[controller setToolbarItems:array animated:animated];
-			[ourNC setToolbarHidden:(hasToolbar == NO ? YES : NO) animated:animated];
+			[ourNC setToolbarHidden:NO animated:animated];
 			[ourNC.toolbar setTranslucent:translucent];
 			[array release];
-			
+			hasToolbar=YES;
 		}
-	},YES);
-	
+		else
+		{
+			BOOL animated = [TiUtils boolValue:@"animated" properties:properties def:NO];
+			[controller setToolbarItems:nil animated:animated];
+			[ourNC setToolbarHidden:YES animated:animated];
+			[ourNC.toolbar setTranslucent:translucent];
+			hasToolbar=NO;
+		}
+	}
+	else
+	{
+		[self replaceValue:[[[TiComplexValue alloc] initWithValue:items properties:properties] autorelease] forKey:@"toolbar" notification:NO];
+	}
 }
 
 
@@ -730,27 +729,23 @@ else{\
 - (void)viewWillAppear:(BOOL)animated;    // Called when the view is about to made visible. Default does nothing
 {
 	animating = YES;
-	[super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated;     // Called when the view has been fully transitioned onto the screen. Default does nothing
 {
 	animating = NO;
 	[self updateTitleView];
-	[super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated; // Called when the view is dismissed, covered or otherwise hidden. Default does nothing
 {
 	animating = YES;
-	[super viewWillDisappear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated;  // Called after the view was dismissed, covered or otherwise hidden. Default does nothing
 {
 	animating = NO;
 	[self updateTitleView];
-	[super viewDidDisappear:animated];
 }
 
 -(void)setupWindowDecorations
@@ -789,25 +784,6 @@ else{\
 	}
 }
 
--(void)cleanupWindowDecorations
-{
-    if (controller != nil) {
-        UIBarButtonItem *item = controller.navigationItem.leftBarButtonItem;
-        if ([item respondsToSelector:@selector(proxy)])
-        {
-			TiViewProxy* p = (TiViewProxy*)[item performSelector:@selector(proxy)];
-            [p removeBarButtonView];
-        }
-        
-        item = controller.navigationItem.rightBarButtonItem;
-        if ([item respondsToSelector:@selector(proxy)]) 
-        {
-			TiViewProxy* p = (TiViewProxy*)[item performSelector:@selector(proxy)];
-            [p removeBarButtonView];
-        }
-    }
-}
-
 -(void)_tabBeforeFocus
 {
 	if (focused==NO)
@@ -819,9 +795,6 @@ else{\
 
 -(void)_tabBeforeBlur
 {
-    if (focused==YES) {
-        [self cleanupWindowDecorations];
-    }
 	[barImageView removeFromSuperview];
 	[super _tabBeforeBlur];
 }
@@ -833,10 +806,7 @@ else{\
 		// we can't fire focus here since we 
 		// haven't yet wired up the JS context at this point
 		// and listeners wouldn't be ready
-		if(![self opening])
-		{
-			[self fireFocus:YES];
-		}
+		[self fireFocus:YES];
 		[self setupWindowDecorations];
 	}
 	[super _tabFocus];
@@ -847,9 +817,7 @@ else{\
 	if (focused)
 	{
 		[self fireFocus:NO];
-		if ([navController topViewController] != controller) {
-			[barImageView removeFromSuperview];
-		}
+		[barImageView removeFromSuperview];
 	}
 	[super _tabBlur];
 }

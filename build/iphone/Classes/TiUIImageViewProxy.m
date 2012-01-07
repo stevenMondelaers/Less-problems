@@ -108,6 +108,8 @@ static NSArray* imageKeySequence;
 	RELEASE_TO_NIL(urlRequest);
     [self replaceValue:nil forKey:@"image" notification:NO];
     
+    // Purge needs to happen AFTER we've released the ref to 'image', so that the cache knows it can unload the information
+    BOOL released = [[ImageLoader sharedLoader] purgeEntry:imageURL];
     RELEASE_TO_NIL(imageURL);
 	[super dealloc];
 }
@@ -209,10 +211,7 @@ USE_VIEW_FOR_AUTO_HEIGHT
 {
 	if (request == urlRequest)
 	{
-		if ([self _hasListeners:@"error"])
-		{
-			[self fireEvent:@"error" withObject:[NSDictionary dictionaryWithObjectsAndKeys:[request url], @"image", nil]];
-		}
+		NSLog(@"[ERROR] Failed to load image: %@, Error: %@",[request url], error);
 		RELEASE_TO_NIL(urlRequest);
 	}
 }

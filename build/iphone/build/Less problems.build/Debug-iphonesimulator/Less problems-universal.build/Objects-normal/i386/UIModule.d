@@ -25,20 +25,17 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIAlertDialogProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Ti2DMatrix.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOS3DMatrix.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSAdViewProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIViewProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIView.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Ti3DMatrix.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiAnimation.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiPoint.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ListenerEntry.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/LayoutConstraint.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiGradient.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPadProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPadPopoverProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIView.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiGradient.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewController.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPadSplitWindowProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiWindowProxy.h \
@@ -46,11 +43,10 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiTabGroup.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIWindow.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPadDocumentViewerProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSAdViewProxy.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIViewProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIClipboardProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSCoverFlowViewProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSToolbarProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiToolbar.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiOSTabbedBarProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiApp.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiHost.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Bridge.h \
@@ -64,6 +60,5 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestConfig.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIProgressDelegate.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASICacheDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASINetworkQueue.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Webcolor.h

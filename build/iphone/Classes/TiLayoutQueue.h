@@ -15,6 +15,5 @@
 }
 
 +(void)addViewProxy:(TiViewProxy*)newViewProxy;
-+(void)layoutProxy:(TiViewProxy*)thisProxy;
 
 @end

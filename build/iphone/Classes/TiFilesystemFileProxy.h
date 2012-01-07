@@ -8,7 +8,7 @@
  */
 #import "TiBase.h"
 
-#if defined(USE_TI_FILESYSTEM) || defined(USE_TI_DATABASE)
+#ifdef USE_TI_FILESYSTEM
 
 #import "TiFile.h"
 
@@ -33,7 +33,6 @@
 @property(nonatomic,readonly) id executable;
 @property(nonatomic,readonly) id hidden;
 
-@property(nonatomic,readwrite,assign) NSNumber* remoteBackup;
 
 
 @end

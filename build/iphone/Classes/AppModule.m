@@ -13,7 +13,7 @@
 #import "SBJSON.h"
 #import "ListenerEntry.h"
 #import "TiApp.h"
-#if defined(USE_TI_APPIOS)
+#if defined(USE_TI_APPIOS) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 #import "TiAppiOSProxy.h"
 #endif
 
@@ -35,7 +35,6 @@ extern NSString * const TI_APPLICATION_GUID;
 	RELEASE_TO_NIL(appListeners);
 	RELEASE_TO_NIL(properties);
 #ifdef USE_TI_APPIOS
-    [self forgetProxy:iOS];
 	RELEASE_TO_NIL(iOS);
 #endif	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -171,7 +170,7 @@ extern NSString * const TI_APPLICATION_GUID;
 
 -(int)garbageCollect:(NSArray*)args
 {
-	KrollBridge * ourBridge = (KrollBridge *)[self executionContext];
+	KrollBridge * ourBridge = [self executionContext];
 	return [ourBridge forceGarbageCollectNow];
 }
 
@@ -227,7 +226,6 @@ extern NSString * const TI_APPLICATION_GUID;
 {
 	RELEASE_TO_NIL(properties);
 #ifdef USE_TI_APPIOS
-    [self forgetProxy:iOS];
 	RELEASE_TO_NIL(iOS);
 #endif
 	[super didReceiveMemoryWarning:notification];
@@ -408,13 +406,12 @@ extern NSString * const TI_APPLICATION_GUID;
 	return TI_APPLICATION_GUID;
 }
 
-#if defined(USE_TI_APPIOS)
+#if defined(USE_TI_APPIOS) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 -(id)iOS
 {
 	if (iOS==nil)
 	{
 		iOS = [[TiAppiOSProxy alloc] _initWithPageContext:[self executionContext]];
-        [self rememberProxy:iOS];
 	}
 	return iOS;
 }

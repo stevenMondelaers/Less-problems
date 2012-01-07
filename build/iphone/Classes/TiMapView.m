@@ -15,6 +15,8 @@
 #import "TiMapAnnotationProxy.h"
 #import "TiMapPinAnnotationView.h"
 #import "TiMapImageAnnotationView.h"
+#import "TiMapRouteAnnotation.h"
+#import "TiMapRouteAnnotationView.h"
 
 @implementation TiMapView
 
@@ -28,23 +30,13 @@
 		RELEASE_TO_NIL(map);
 	}
 	RELEASE_TO_NIL(pendingAnnotationSelection);
-    if (mapLine2View) {
-        CFRelease(mapLine2View);
-        mapLine2View = nil;
-    }
-    if (mapName2Line) {
-        CFRelease(mapName2Line);
-        mapName2Line = nil;
-    }
+	RELEASE_TO_NIL(routes);
+	RELEASE_TO_NIL(routeViews);
 	[super dealloc];
 }
 
 -(void)render
 {
-	if (![NSThread isMainThread]) {
-		[self performSelectorOnMainThread:@selector(render) withObject:nil waitUntilDone:NO];
-		return;
-	}  	  
 	if (region.center.latitude!=0 && region.center.longitude!=0)
 	{
 		[map setRegion:[map regionThatFits:region] animated:animate];
@@ -61,9 +53,6 @@
 		map.showsUserLocation = YES; // defaults
 		map.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 		[self addSubview:map];
-		mapLine2View = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-		mapName2Line = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        
 	}
 	return map;
 }
@@ -76,7 +65,7 @@
 
 -(void)didFirePropertyChanges
 {
-	[self render];
+	[self performSelectorOnMainThread:@selector(render) withObject:nil waitUntilDone:NO];
 }
 
 -(void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds
@@ -227,7 +216,7 @@
 	}
 	else {
 		[pendingAnnotationSelection release];
-		pendingAnnotationSelection = (TiMapAnnotationProxy*)[annotation retain];
+		pendingAnnotationSelection = [annotation retain];
 	}
 }
 
@@ -442,79 +431,98 @@
 
 -(void)addRoute:(id)args
 {
-	// process args
-    ENSURE_DICT(args);
+	ENSURE_DICT(args);
 	
 	NSArray *points = [args objectForKey:@"points"];
-	if (!points) {
+	if (points==nil)
+	{
 		[self throwException:@"missing required points key" subreason:nil location:CODELOCATION];
 	}
-    if (![points count]) {
-		[self throwException:@"missing required points data" subreason:nil location:CODELOCATION];
-    }
 	NSString *name = [TiUtils stringValue:@"name" properties:args];
-	if (!name) {
-		[self throwException:@"missing required name key" subreason:nil location:CODELOCATION];
+	if (routes==nil)
+	{
+		routes = [[NSMutableDictionary dictionary] retain];
 	}
-    TiColor* color = [TiUtils colorValue:@"color" properties:args];
-    float width = [TiUtils floatValue:@"width" properties:args def:2];
-
-    // construct the MKPolyline 
-    MKMapPoint* pointArray = malloc(sizeof(CLLocationCoordinate2D) * [points count]);
-    for (int i = 0; i < [points count]; ++i) {
-        NSDictionary* entry = [points objectAtIndex:i];
-        CLLocationDegrees lat = [TiUtils doubleValue:[entry objectForKey:@"latitude"]];
-        CLLocationDegrees lon = [TiUtils doubleValue:[entry objectForKey:@"longitude"]];
-        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(lat, lon);
-        MKMapPoint pt = MKMapPointForCoordinate(coord);
-        pointArray[i] = pt;             
-    }
-    MKPolyline* routeLine = [[MKPolyline polylineWithPoints:pointArray count:[points count]] autorelease];
-    free(pointArray);
-    
-	// construct the MKPolylineView
-    MKPolylineView* routeView = [[MKPolylineView alloc] initWithPolyline:routeLine];
-    routeView.fillColor = routeView.strokeColor = color ? [color _color] : [UIColor blueColor];
-    routeView.lineWidth = width;
-    
-    // update our mappings
-    CFDictionaryAddValue(mapName2Line, name, routeLine);
-    CFDictionaryAddValue(mapLine2View, routeLine, routeView);
-    // finally add our new overlay
-    [map addOverlay:routeLine];
+	
+	id<MKAnnotation> ann = [routes objectForKey:name];
+	if (ann!=nil)
+	{
+		[map removeAnnotation:ann];
+		[routes removeObjectForKey:name];
+		[routeViews removeObjectForKey:name];
+	}
+	
+	if (routeViews==nil)
+	{
+		routeViews = [[NSMutableDictionary dictionary] retain];
+	}
+		
+	TiMapRouteAnnotation *route = [[TiMapRouteAnnotation alloc]initWithPoints:points];
+	route.routeID = name;
+	
+	TiColor *color = [TiUtils colorValue:@"color" properties:args];
+	
+	if (color!=nil)
+	{
+		route.lineColor = [color _color];
+	}
+	
+	route.width = [TiUtils floatValue:@"width" properties:args def:2];
+	
+	[map addAnnotation:route];
+	[routes setObject:route forKey:name];
+	[route release];
 }
 
 -(void)removeRoute:(id)args
 {
-    ENSURE_DICT(args);
-    NSString* name = [TiUtils stringValue:@"name" properties:args];
-	if (!name) {
-		[self throwException:@"missing required name key" subreason:nil location:CODELOCATION];
+	ENSURE_DICT(args);
+	NSString *name = [TiUtils stringValue:@"name" properties:args];
+	if (routes==nil)
+	{
+		routes = [[NSMutableDictionary dictionary] retain];
 	}
-    
-    MKPolyline* routeLine = (MKPolyline*)CFDictionaryGetValue(mapName2Line, name);
-    if (routeLine) {
-        CFDictionaryRemoveValue(mapLine2View, routeLine);
-        CFDictionaryRemoveValue(mapName2Line, name);
-        [map removeOverlay:routeLine];
-    }
+	id<MKAnnotation> ann = [routes objectForKey:name];
+	if (ann!=nil)
+	{
+		[map removeAnnotation:ann];
+		[routes removeObjectForKey:name];
+		[routeViews removeObjectForKey:name];
+	}
 }
 
 
 #pragma mark Delegates
 
-- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay
-{	
-    return (MKOverlayView *)CFDictionaryGetValue(mapLine2View, overlay);
-}
-
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
 {
+	if (routeViews!=nil)
+	{
+		// turn off the view of the route as the map is chaning regions. This prevents
+		// the line from being displayed at an incorrect positoin on the map during the
+		// transition. 
+		for(NSObject* key in [routeViews allKeys])
+		{
+			TiMapRouteAnnotationView* routeView = [routeViews objectForKey:key];
+			routeView.hidden = YES;
+		}
+	}
+	[self retain];
 }
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
 	[self flushPendingAnnotation];
+	if (routeViews!=nil)
+	{
+		// re-enable and re-poosition the route display. 
+		for(NSObject* key in [routeViews allKeys])
+		{
+			TiMapRouteAnnotationView* routeView = [routeViews objectForKey:key];
+			routeView.hidden = NO;
+			[routeView regionChanged];
+		}
+	}
 	
 	if ([self.proxy _hasListeners:@"regionChanged"])
 	{
@@ -579,26 +587,31 @@
 	return nil;
 }
 
-- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view{
-	if ([view conformsToProtocol:@protocol(TiMapAnnotation)])
+// TODO: We can remove all this when we go to 4.0-only... including the click detection stuff, thanks to new delegates.
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
+	NSString *action = (NSString*)context;
+	if([action isEqualToString:@"ANSELECTED"])
 	{
-		BOOL isSelected = [view isSelected];
-		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
-		[self fireClickEvent:view source:isSelected?@"pin":[ann lastHitName]];
-		manualSelect = NO;
-		hitSelect = NO;
-		return;
-	}
-}
-- (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view{
-	if ([view conformsToProtocol:@protocol(TiMapAnnotation)])
-	{
-		BOOL isSelected = [view isSelected];
-		MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)view;
-		[self fireClickEvent:view source:isSelected?@"pin":[ann lastHitName]];
-		manualSelect = NO;
-		hitSelect = NO;
-		return;
+		if ([object conformsToProtocol:@protocol(TiMapAnnotation)])
+		{
+			MKAnnotationView<TiMapAnnotation> *ann = (MKAnnotationView<TiMapAnnotation> *)object;
+			BOOL isSelected = [ann isSelected];
+			
+			// Short-circuit on manual selection; we don't need to do all the expensive "which point did we hit" stuff
+			if (manualSelect || hitSelect && (hitAnnotation == [ann annotation] || hitAnnotation == nil)) {
+				[self fireClickEvent:ann source:isSelected?@"pin":[ann lastHitName]];
+				// Manual selection only fires once - but don't clear hitAnnotation until the next hit event/manual select
+				// hitSelect is necessary to avoid some internal madness where 'selected' will toggle rapidly when scrolling to
+				// show an annotation's accessory view
+				manualSelect = NO;
+				hitSelect = NO;
+				return;
+			}
+		}
 	}
 }
 
@@ -630,7 +643,23 @@
 	{
 		[self performSelector:@selector(flushPendingAnnotation) withObject:nil afterDelay:0.0];
 	}
-	if ([annotation isKindOfClass:[TiMapAnnotationProxy class]])
+	if ([annotation isKindOfClass:[TiMapRouteAnnotation class]])
+	{
+		TiMapRouteAnnotation *ann = (TiMapRouteAnnotation*)annotation;
+		MKAnnotationView *annView = [routeViews objectForKey:ann.routeID];
+		
+		if (annView==nil)
+		{
+			TiMapRouteAnnotationView *route = [[[TiMapRouteAnnotationView alloc] initWithFrame:CGRectMake(0, 0, mapView.frame.size.width, mapView.frame.size.height)] autorelease];
+			annView = route;
+			route.annotation = ann;
+			route.mapView = mapView;
+			[routeViews setObject:route forKey:ann.routeID];
+		}
+		
+		return annView;
+	}
+	else if ([annotation isKindOfClass:[TiMapAnnotationProxy class]])
 	{
 		TiMapAnnotationProxy *ann = (TiMapAnnotationProxy*)annotation;
 		static NSString *identifier = @"timap";
@@ -730,10 +759,25 @@
 		// OK, we hit something - if the result is an annotation... (3.2+)
 		if ([result isKindOfClass:[MKAnnotationView class]]) {
 			hitAnnotation = [(MKAnnotationView*)result annotation];
-		} else {
+		}
+		// .. But maybe it's in a subview.  (3.1.x)
+		else if (![TiUtils isiPhoneOS3_2OrGreater]) {
+			// We take advantage of some nonobvious magic here, based on information about
+			// the clicky bits of subviews... if the subview is in fact a map view.
+			// Otherwise, we're on an annotation view or overlay, and didn't hit an annotation.
+			if ([[result subviews] count] >= 2) {
+				UIView* containerView = [[result subviews] objectAtIndex:1];
+				hitAnnotation = [self wasHitOnAnnotation:point inView:containerView];
+			}
+			else {
+				hitAnnotation = nil;
+			}
+		}
+		else {
 			hitAnnotation = nil;
 		}
-	} else {
+	}
+	else {
 		hitAnnotation = nil;
 	}
 	hitSelect = YES;

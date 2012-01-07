@@ -26,7 +26,4 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFilesystemFileProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFilesystemBlobProxy.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiFilesystemFileStreamProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiStreamProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiHost.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Bridge.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiStylesheet.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiStreamProxy.h

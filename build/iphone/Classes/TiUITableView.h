@@ -27,7 +27,7 @@
 	CGPoint hitPoint;
 }
 @property (nonatomic,readonly) CGPoint hitPoint;
-@property (nonatomic,readwrite,retain) TiUITableViewRowProxy* proxy;
+@property (nonatomic,readwrite) TiUITableViewRowProxy* proxy;
 
 -(id)initWithStyle:(UITableViewCellStyle)style_ reuseIdentifier:(NSString *)reuseIdentifier_ row:(TiUITableViewRowProxy*)row_;
 
@@ -37,7 +37,6 @@
 -(void) setSelectedBackgroundGradient_:(TiGradient *)newGradient;
 
 -(void) updateGradientLayer:(BOOL)useSelected;
--(CGSize)computeCellSize;
 
 @end
 
@@ -60,8 +59,8 @@
 	UIView * tableHeaderView;
 	UIView * tableHeaderPullView;
 	UIButton * searchScreenView;
+	UITableView *searchTableView;
 	NSString * filterAttribute;
-	NSString * searchString;
 	NSMutableArray * searchResultIndexes;
 	BOOL filterCaseInsensitive;
 	BOOL allowsSelectionSet;
@@ -84,8 +83,9 @@
 -(void)scrollToTop:(NSInteger)top animated:(BOOL)animated;
 -(NSIndexPath*)indexPathFromSearchIndex:(int)index;
 -(IBAction)hideSearchScreen:(id)sender;
+-(UITableView*)searchTableView;
 -(UITableView*)tableView;
--(CGFloat)tableRowHeight:(CGFloat)height;
+
 
 @end
 

@@ -18,7 +18,6 @@
 #import "TiDOMDocumentProxy.h"
 #import "Mimetypes.h"
 #import "TiFile.h"
-#import "ASIDownloadCache.h"
 
 int CaselessCompare(const char * firstString, const char * secondString, int size)
 {
@@ -97,14 +96,13 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 
 @implementation TiNetworkHTTPClientProxy
 
-@synthesize timeout, validatesSecureCertificate, autoRedirect;
+@synthesize timeout, validatesSecureCertificate;
 
 -(id)init
 {
 	if (self = [super init])
 	{
 		readyState = NetworkClientStateUnsent;
-		autoRedirect = [[NSNumber alloc] initWithBool:YES];
 		validatesSecureCertificate = [[NSNumber alloc] initWithBool:NO];
 	}
 	return self;
@@ -148,7 +146,6 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 	}
 	RELEASE_TO_NIL(url);
 	RELEASE_TO_NIL(request);
-	RELEASE_TO_NIL(autoRedirect);
     RELEASE_TO_NIL(timeout);
     RELEASE_TO_NIL(validatesSecureCertificate);
 	[super _destroy];
@@ -166,13 +163,10 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 	{
 		return [request responseStatusCode];
 	}
-	return -1;
-}
-
--(NSString *)statusText
-{
-	//In the event request is nil, we get nil back anyways.
-	return [request responseStatusMessage];
+	else 
+	{
+		return -1;
+	}
 }
 
 -(NSInteger)readyState
@@ -192,7 +186,7 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 		NSData *data = [request responseData];
 		if (data==nil || [data length]==0) 
 		{
-			return (id)[NSNull null];
+			return nil;
 		}
 		[[data retain] autorelease];
 		NSString * result = [[[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:[request responseEncoding]] autorelease];
@@ -202,26 +196,26 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 			// with in a _special_ way
 			NSStringEncoding encoding = ExtractEncodingFromData(data);
 			result = [[[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:encoding] autorelease];
-			
+			if (result!=nil)
+			{
+				return result;
+			}
 		}
-		if (result!=nil)
-		{
-			return result;
-		}
+		return result;
 	}
-	return (id)[NSNull null];
+	return nil;
 }
 
 -(TiProxy*)responseXML
 {
 	NSString *responseText = [self responseText];
-	if (responseText != nil && (![responseText isEqual:(id)[NSNull null]]))
+	if (responseText!=nil)
 	{
 		TiDOMDocumentProxy *dom = [[[TiDOMDocumentProxy alloc] _initWithPageContext:[self executionContext]] autorelease];
 		[dom parseString:responseText];
 		return dom;
 	}
-	return (id)[NSNull null];
+	return nil;
 }
 
 -(TiBlob*)responseData
@@ -231,7 +225,7 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 		NSString *contentType = [[request responseHeaders] objectForKey:@"Content-Type"];
 		return [[[TiBlob alloc] initWithData:[request responseData] mimetype:contentType] autorelease];
 	}
-	return (id)[NSNull null];
+	return nil;
 }
 
 -(NSString*)connectionType
@@ -279,7 +273,7 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 		thisPointer = [[[TiNetworkHTTPClientResultProxy alloc] initWithDelegate:self] autorelease];
 		[self fireCallback:@"onreadystatechange" withArg:[NSDictionary dictionaryWithObject:@"readystatechange" forKey:@"type"] withSource:thisPointer];
 	}
-	if (state==NetworkClientStateDone && !failed)
+	if (hasOnload && state==NetworkClientStateDone && !failed)
 	{
 		thisPointer = [[[TiNetworkHTTPClientResultProxy alloc] initWithDelegate:self] autorelease];		
 		if (hasOndatastream && downloadProgress>0)
@@ -310,22 +304,7 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 				[thisPointer release];
 			}
 		}
-		
-		/**
-		 *	Per customer request, successful communications that resulted in an
-		 *	4xx or 5xx response is treated as an error instead of an onload.
-		 *	For backwards compatibility, if no error handler is provided, even
-		 *	an 4xx or 5xx response will fall back onto an onload.
-		 */
-		int responseCode = [request responseStatusCode];
-		if (hasOnerror && (responseCode >= 400) && (responseCode <= 599))
-		{
-			[self fireCallback:@"onerror" withArg:[NSDictionary dictionaryWithObject:@"error" forKey:@"type"] withSource:thisPointer];
-		}
-		else if(hasOnload)
-		{
-			[self fireCallback:@"onload" withArg:[NSDictionary dictionaryWithObject:@"load" forKey:@"type"] withSource:thisPointer];
-		}		
+		[self fireCallback:@"onload" withArg:[NSDictionary dictionaryWithObject:@"load" forKey:@"type"] withSource:thisPointer];
 	}
 }
 
@@ -358,7 +337,6 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 	}
 	
 	request = [[ASIFormDataRequest requestWithURL:url] retain];	
-    [request setDownloadCache:[ASIDownloadCache sharedCache]];
 	[request setDelegate:self];
     if (timeout) {
         NSTimeInterval timeoutVal = [timeout doubleValue] / 1000;
@@ -394,26 +372,12 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 	[request setShouldUseRFC2616RedirectBehaviour:YES];
 	BOOL keepAlive = [TiUtils boolValue:[self valueForKey:@"enableKeepAlive"] def:YES];
 	[request setShouldAttemptPersistentConnection:keepAlive];
-	//handled in send, as now optional
-	//[request setShouldRedirect:YES];
+	[request setShouldRedirect:YES];
+	[request setShouldPerformCallbacksOnMainThread:NO];
 	[self _fireReadyStateChange:NetworkClientStateOpened failed:NO];
 	[self _fireReadyStateChange:NetworkClientStateHeaders failed:NO];
 }
--(void)clearCookies:(id)args
-{
-    ENSURE_ARG_COUNT(args,1);
 
-    NSString *host = [TiUtils stringValue:[args objectAtIndex:0]];
-    
-    NSHTTPCookie *cookie;
-    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    NSArray* targetCookies = [storage cookiesForURL:[NSURL URLWithString:host]];
-    if ([targetCookies count] > 0) {
-      for (cookie in targetCookies) {
-          [storage deleteCookie:cookie];
-      }
-    }
-}
 -(void)setRequestHeader:(id)args
 {
 	ENSURE_ARG_COUNT(args,2);
@@ -534,14 +498,8 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 	[self _fireReadyStateChange:NetworkClientStateLoading failed:NO];
 	[request setAllowCompressedResponse:YES];
 	
-	// should it automatically redirect
-	[request setShouldRedirect:[autoRedirect boolValue]];
-	
-	// allow self-signed certs (NO) or required valid SSL (YES)    
+	// allow self-signed certs (NO) or required valid SSL (YES)
 	[request setValidatesSecureCertificate:[validatesSecureCertificate boolValue]];
-    
-    // set the TLS version if needed
-    [request setTlsVersion:[TiUtils intValue:[self valueForUndefinedKey:@"tlsVersion"]]];
 	
 	if (async)
 	{
@@ -555,24 +513,13 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 	}
 }
 
-// Checked with Apache project to see if this is a known bug for them; it's
-// not, so this must be a client-side issue with Apple.
-//
-// Turns out Apple has a bug where they seem to case-correct headers;
-// this turns WWW-Authenticate into Www-Authenticate. We don't have complete
-// information on how response headers are mangled, but assume that
-// they are all case-corrected like this.
-//
-// This occurs in iOS 4 only.
-
 -(id)getResponseHeader:(id)args
 {
-    ENSURE_SINGLE_ARG(args, NSString);
-    
 	if (request!=nil)
 	{
-        NSString* header = [TiUtils caseCorrect:args];
-		return [[request responseHeaders] objectForKey:header];
+		id key = [args objectAtIndex:0];
+		ENSURE_TYPE(key,NSString);
+		return [[request responseHeaders] objectForKey:key];
 	}
 	return nil;
 }
@@ -638,7 +585,6 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 	if (hasOndatastream)
 	{
 		CGFloat progress = (CGFloat)((CGFloat)downloadProgress/(CGFloat)downloadLength);
-		progress = progress == INFINITY ? 1.0 : progress;
 		TiNetworkHTTPClientResultProxy *thisPointer = [[TiNetworkHTTPClientResultProxy alloc] initWithDelegate:self];
 		NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:progress],@"progress",@"datastream",@"type",nil];
 		[self fireCallback:@"ondatastream" withArg:event withSource:thisPointer];

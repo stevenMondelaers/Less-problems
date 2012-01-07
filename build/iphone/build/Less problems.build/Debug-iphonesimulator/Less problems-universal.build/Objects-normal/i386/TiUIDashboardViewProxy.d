@@ -30,8 +30,7 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiBlob.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/LayoutConstraint.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiGradient.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIDashboardItemProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/LauncherItem.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIDashboardView.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/LauncherView.h \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/LauncherItem.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/LauncherButton.h

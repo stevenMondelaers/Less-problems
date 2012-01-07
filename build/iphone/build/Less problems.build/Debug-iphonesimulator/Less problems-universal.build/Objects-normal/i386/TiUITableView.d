@@ -40,20 +40,5 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestConfig.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIProgressDelegate.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASICacheDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASINetworkQueue.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUITableViewProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiApp.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiHost.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Bridge.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiStylesheet.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/KrollBridge.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/XHRBridge.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiRootViewController.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiRootController.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiWindowProxy.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiTab.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiTabGroup.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIWindow.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewController.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiLayoutQueue.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUITableViewProxy.h

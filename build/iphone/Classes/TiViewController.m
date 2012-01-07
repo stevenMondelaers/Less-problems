@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2011 by Lessproblems, Inc. All Rights Reserved.
+ * Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  * 
@@ -10,7 +10,7 @@
 #import "TiViewController.h"
 #import "TiApp.h"
 
-#import "TiViewProxy.h"
+
 
 @implementation TiViewController
 
@@ -25,6 +25,7 @@
 
 -(void)dealloc
 {
+//    RELEASE_TO_NIL(proxy);
     [super dealloc];
 }
 
@@ -56,7 +57,7 @@
 	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 	if ([proxy respondsToSelector:@selector(willRotateToInterfaceOrientation:duration:)])
 	{
-		[(TiViewController*)proxy willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+		[proxy willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 	}
 	[[proxy childViewController] willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
@@ -66,7 +67,7 @@
 	[super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 	if ([proxy respondsToSelector:@selector(didRotateFromInterfaceOrientation:)])
 	{
-		[(TiViewController*)proxy didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+		[proxy didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 	}
 	[[proxy childViewController] didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
@@ -88,33 +89,35 @@
 		[proxy viewWillAppear:animated];
 	}
 	[[proxy childViewController] viewWillAppear:animated];
+	VerboseLog(@"%@:%@%@",self,proxy,CODELOCATION);
 }
-
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated;     // Called when the view has been fully transitioned onto the screen. Default does nothing
 {
 	if ([proxy respondsToSelector:@selector(viewDidAppear:)])
 	{
 		[proxy viewDidAppear:animated];
 	}
 	[[proxy childViewController] viewDidAppear:animated];
+	VerboseLog(@"%@:%@%@",self,proxy,CODELOCATION);
 }
-
-- (void)viewWillDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated; // Called when the view is dismissed, covered or otherwise hidden. Default does nothing
 {
 	if ([proxy respondsToSelector:@selector(viewWillDisappear:)])
 	{
 		[proxy viewWillDisappear:animated];
 	}
 	[[proxy childViewController] viewWillDisappear:animated];
+	VerboseLog(@"%@:%@%@",self,proxy,CODELOCATION);
 }
-
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewDidDisappear:(BOOL)animated;  // Called after the view was dismissed, covered or otherwise hidden. Default does nothing
 {
 	if ([proxy respondsToSelector:@selector(viewDidDisappear:)])
 	{
 		[proxy viewDidDisappear:animated];
 	}
 	[[proxy childViewController] viewDidDisappear:animated];
+
+	VerboseLog(@"%@:%@%@",self,proxy,CODELOCATION);
 }
 
 @end

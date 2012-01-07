@@ -21,7 +21,7 @@
 }
 
 @property(nonatomic,readonly) NSString *path;
-@property(nonatomic,readonly) unsigned long long size;
+@property(nonatomic,readonly) NSInteger size;
 
 -(id)initWithPath:(NSString*)path;
 -(id)initWithTempFilePath:(NSString*)path;

@@ -20,6 +20,10 @@
 
 @property(nonatomic,readonly) FacebookModule *_module;
 
+
+@property(nonatomic,readonly) NSNumber *STYLE_NORMAL;
+@property(nonatomic,readonly) NSNumber *STYLE_WIDE;
+
 -(void)internalSetWidth:(id)width;
 -(void)internalSetHeight:(id)height;
 

@@ -34,5 +34,4 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiTab.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiTabGroup.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIWindow.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewController.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUIiPhoneNavigationGroupProxy.h
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiViewController.h

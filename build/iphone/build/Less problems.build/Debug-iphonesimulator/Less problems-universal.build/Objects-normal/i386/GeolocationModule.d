@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/GeolocationModule.mm \
+  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/GeolocationModule.m \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/GeolocationModule.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiModule.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiUtils.h \
@@ -28,7 +28,6 @@ dependencies: \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestConfig.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIHTTPRequestDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASIProgressDelegate.h \
-  /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/ASI/ASICacheDelegate.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiApp.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/TiHost.h \
   /Users/Niels/Projecten\ GIT/Less-problems/build/iphone/Classes/Bridge.h \

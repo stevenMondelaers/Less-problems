@@ -19,7 +19,7 @@
 #endif
 
 @interface AudioStreamerBC ()
-@property (nonatomic, readwrite) TI_AudioStreamerState state;
+@property (readwrite) TI_AudioStreamerState state;
 
 - (void)handlePropertyChangeForFileStream:(AudioFileStreamID)inAudioFileStream
 	fileStreamPropertyID:(AudioFileStreamPropertyID)inPropertyID
@@ -642,7 +642,7 @@ void ASReadStreamCallBackBC
 			if (state != AS_STOPPING &&
 				state != AS_STOPPED)
 			{
-				NSLog(@"### Not starting audio thread. State code is: %u", state);
+				NSLog(@"### Not starting audio thread. State code is: %ld", state);
 			}
 			self.state = AS_INITIALIZED;
 			[pool release];
@@ -781,7 +781,7 @@ cleanup:
 		{
 			if (state != AS_PLAYING && state != AS_PAUSED && state != AS_BUFFERING)
 			{
-				return lastProgress * 1000;
+				return lastProgress;
 			}
 
 			AudioTimeStamp queueTime;
@@ -799,10 +799,11 @@ cleanup:
 			}
 			
 			lastProgress = progress;
+			return progress;
 		}
 	}
 	
-	return lastProgress * 1000;
+	return lastProgress;
 }
 
 //

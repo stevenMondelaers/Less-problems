@@ -33,7 +33,7 @@
 
 -(void)setDelegate:(id<UISearchBarDelegate>)delegate
 {
-    [self makeViewPerformSelector:@selector(setDelegate:) withObject:delegate createIfNeeded:(delegate!=nil) waitUntilDone:YES];
+	[[self view] performSelector:@selector(setDelegate:) withObject:delegate];
 }
 
 -(UISearchBar*)searchBar

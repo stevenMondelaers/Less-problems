@@ -23,13 +23,9 @@
 	
 	TiUITabGroupProxy *tabGroup;
 	TiUITabController *current;
-    
-    NSArray* controllerStack;
-    NSMutableArray* closingWindows;
-    
+	TiWindowProxy *closingWindow;
 	BOOL opening;
 	BOOL systemTab;
-	BOOL transitionIsAnimating;
 	
 	id<TiOrientationController> parentOrientationController;
 }

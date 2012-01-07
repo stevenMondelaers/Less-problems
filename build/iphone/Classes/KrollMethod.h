@@ -32,11 +32,11 @@ typedef enum KrollMethodType {
 @private
 	SEL selector;
 	int argcount;
-    
 	KrollMethodType type;
-	id name;    
-	NSString * propertyKey;
+	id name;
+
 	BOOL updatesProperty;
+	NSString * propertyKey;
 }
 
 -(id)initWithTarget:(id)target_ selector:(SEL)selector_ argcount:(int)argcount_ type:(KrollMethodType)type_ name:(id)name_ context:(KrollContext*)context_;
