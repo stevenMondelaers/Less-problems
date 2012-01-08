@@ -34,10 +34,16 @@ xhr.onload = function()
 	for(i = 0 ; i < elements.length ; i++)
 	{
 		var title = elements.item(i);
+		var id = doc.getElementsByTagName("vid").item(i);
 		
-		tableview_overzicht.appendRow(Ti.UI.createTableViewRow({hasChild: true, title: '' + title.text}));
+		tableview_overzicht.appendRow(Ti.UI.createTableViewRow({hasChild: true, title: '' + title.text, id: '' + id.text}));
 		
 	}
+	
+	tableview_overzicht.addEventListener('click', function(e){
+		alert(e.rowData.id);
+	})
+	
 };
 
 xhr.open('GET','http://less-problems.webatu.com/api/views/problems.xml');

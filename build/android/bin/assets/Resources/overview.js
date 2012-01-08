@@ -7,42 +7,47 @@ var window_overzicht = Ti.UI.createWindow({
 });
 
 var view_overzicht = Ti.UI.createView();
-var view_overzichtLoading = Ti.UI.createView({
-	//visible:false
-});
+var view_overzichtLoading = Ti.UI.createView();
 
 var lbl_loading = Ti.UI.createLabel({
 	text:'Loading problems'
 });
 
-var img_loading = Ti.UI.createImageView({
-	image:'img/KS_nav_ui.png',
-	height:46,
-	width:43
-})
-
 view_overzichtLoading.add(lbl_loading);
-view_overzichtLoading.add(img_loading);
 view_overzicht.add(view_overzichtLoading);
 
 var tableview_overzicht = Titanium.UI.createTableView();
 
 var xhr = Titanium.Network.createHTTPClient();
+var problemIds = [];
 
 xhr.onload = function()
 {
+	tableview_overzicht.visible = false;
+	view_overzichtLoading.visible = true;
+	
 	var doc = this.responseXML.documentElement;		
 	var elements = doc.getElementsByTagName("title");
 	
+	tableview_overzicht.visible = true;
 	view_overzichtLoading.visible = false;
 		
 	for(i = 0 ; i < elements.length ; i++)
 	{
 		var title = elements.item(i);
+		var id = doc.getElementsByTagName("vid").item(i);
 		
-		tableview_overzicht.appendRow(Ti.UI.createTableViewRow({hasChild: true, title: '' + title.text}));
+		problemIds.push(id);
+		
+		tableview_overzicht.appendRow(Ti.UI.createTableViewRow({hasChild: true, title: '' + title.text, id: '' + id.text}));
 		
 	}
+	
+	tableview_overzicht.addEventListener('click', function(e){
+		alert(e.rowData.id);
+		//alert(problemIds[e.index]);
+	})
+	
 };
 
 xhr.open('GET','http://less-problems.webatu.com/api/views/problems.xml');
