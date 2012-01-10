@@ -93,12 +93,6 @@ xhr_details.onload = function(){
 			
 			window_details.open();
 			
-			/*var image = Ti.UI.createImageView({
-				image:'http://3.bp.blogspot.com/-kQtmk3Ql7HI/TdlBTl0WpKI/AAAAAAAAAFw/ioQw2PCMiCU/s1600/fujistsu_projector_bay_v1.jpg'
-			})
-			
-			view_overzicht.add(image);*/
-			
 		}
 
 xhr.open('GET','http://less-problems.webatu.com/api/views/problems.xml');
