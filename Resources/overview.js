@@ -1,7 +1,7 @@
 
 var window_overzicht = Ti.UI.createWindow({
   backgroundColor : "#333",
-  title: 'Overzicht problemen'
+  title: 'Overzicht'
   //navBarHidden:true,
   //fullscreen: true
 });
@@ -62,7 +62,7 @@ xhr_details.onload = function(){
 			var elements = doc.getElementsByTagName("title");
 			
 			var view_details = Ti.UI.createView({
-				backgroundColor: '#333'
+				backgroundColor: '#fff'
 			});
 			
 			window_overzicht.title = doc.getElementsByTagName("title").item(0).text;
@@ -84,13 +84,37 @@ xhr_details.onload = function(){
 				view_overzicht.show();
 			});
 			
+			var view_titel = Ti.UI.createView();
 			var lblTitel = Ti.UI.createLabel();
-			var lblLokaal = Ti.UI.createLabel();
-			var lblBeschrijving = Ti.UI.createLabel();
+			
+			var view_lokaal = Ti.UI.createView({
+				top: 0,
+				height: 50
+			});
+			
+			var lblLokaal = Ti.UI.createLabel({ 
+				font: {fontSize: 12},
+				left: 10
+			});
+			
+			var view_beschrijving = Ti.UI.createScrollView({
+				backgroundColor: '#fff',
+				contentWidth:'auto',
+				contentHeight:'auto',
+				top:60
+			});
+			
+			//var lblBeschrijving = Ti.UI.createLabel();
+			var lblBeschrijving = Ti.UI.createLabel({ 
+				font: {fontSize: 12},
+				left: 10,
+				top: 0,
+				height: 'auto'
+			});
 			
 			lblTitel.text = doc.getElementsByTagName("title").item(0).text;
-			lblLokaal.text = doc.getElementsByTagName("value").item(1).text;
-			lblBeschrijving.text = doc.getElementsByTagName("value").item(0).text;
+			lblLokaal.text = 'Lokaal: ' + doc.getElementsByTagName("value").item(1).text;
+			lblBeschrijving.text = 'Beschrijving: \n \n' + doc.getElementsByTagName("value").item(0).text;
 			
 			if (Titanium.Platform.name == 'iPhone OS')
 			{
@@ -102,10 +126,13 @@ xhr_details.onload = function(){
     			view_details.add(btn_back);
 			}
 			
+			//view_titel.add(lblTitel);
+			view_lokaal.add(lblLokaal);
+			view_beschrijving.add(lblBeschrijving);
 			
-			view_details.add(lblTitel);
-			view_details.add(lblLokaal);
-			view_details.add(lblBeschrijving);
+			//view_details.add(view_titel);
+			view_details.add(view_lokaal);
+			view_details.add(view_beschrijving);
 			
 			window_overzicht.add(view_details);
 			
