@@ -57,47 +57,57 @@ xhr_details.onload = function(){
 			//alert('Succes');
 			
 			//alert(this.responseText);
-			var window_details = Ti.UI.createWindow({
-				zindex: 1,
-				backgroundColor: '#333',
-				layout: 'vertical'
+			
+			var doc = this.responseXML.documentElement;		
+			var elements = doc.getElementsByTagName("title");
+			
+			var view_details = Ti.UI.createView({
+				backgroundColor: '#333'
 			});
 			
+			window_overzicht.title = doc.getElementsByTagName("title").item(0).text;
+			
 			var btn_back = Ti.UI.createButton({
-				title : "<-",
-				top:0,
-				left:0,
-				width: 50,
-				height:50
+				title : "Back",
+				height:40,
+				width:145,
+				top:10,
+				left:10,
+				style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
 			});
 			
 			btn_back.addEventListener("click" , function(e){
-				window_details.close();
+				view_details.hide();
+				window_overzicht.remove(view_details);
+				window_overzicht.title = 'Overzicht';
+				window_overzicht.leftNavButton = null;
+				view_overzicht.show();
 			});
 			
 			var lblTitel = Ti.UI.createLabel();
 			var lblLokaal = Ti.UI.createLabel();
 			var lblBeschrijving = Ti.UI.createLabel();
 			
-			var doc = this.responseXML.documentElement;		
-			var elements = doc.getElementsByTagName("title");
-			
 			lblTitel.text = doc.getElementsByTagName("title").item(0).text;
 			lblLokaal.text = doc.getElementsByTagName("value").item(1).text;
 			lblBeschrijving.text = doc.getElementsByTagName("value").item(0).text;
 			
-			window_details.add(btn_back);
-			window_details.add(lblTitel);
-			window_details.add(lblLokaal);
-			window_details.add(lblBeschrijving);
+			if (Titanium.Platform.name == 'iPhone OS')
+			{
+    			window_overzicht.leftNavButton = btn_back;
+			}
+ 
+			if (Titanium.Platform.name == 'android')
+			{
+    			view_details.add(btn_back);
+			}
 			
-			window_details.open();
 			
-			/*var image = Ti.UI.createImageView({
-				image:'http://3.bp.blogspot.com/-kQtmk3Ql7HI/TdlBTl0WpKI/AAAAAAAAAFw/ioQw2PCMiCU/s1600/fujistsu_projector_bay_v1.jpg'
-			})
+			view_details.add(lblTitel);
+			view_details.add(lblLokaal);
+			view_details.add(lblBeschrijving);
 			
-			view_overzicht.add(image);*/
+			window_overzicht.add(view_details);
 			
 		}
 

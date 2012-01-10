@@ -92,7 +92,17 @@ xhr_details.onload = function(){
 			lblLokaal.text = doc.getElementsByTagName("value").item(1).text;
 			lblBeschrijving.text = doc.getElementsByTagName("value").item(0).text;
 			
-			window_overzicht.leftNavButton = btn_back;
+			if (Titanium.Platform.name == 'iPhone OS')
+			{
+    			window_overzicht.leftNavButton = btn_back;
+			}
+ 
+			if (Titanium.Platform.name == 'android')
+			{
+    			view_details.add(btn_back);
+			}
+			
+			
 			view_details.add(lblTitel);
 			view_details.add(lblLokaal);
 			view_details.add(lblBeschrijving);
