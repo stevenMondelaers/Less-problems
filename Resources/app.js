@@ -6,7 +6,9 @@ Ti.include('overview.js');
 Ti.include('new_problem.js');
 
 //-- Tabgroup Navigatie
-var navigation = Titanium.UI.createTabGroup();
+var navigation = Titanium.UI.createTabGroup({
+	zindex: 10
+});
 
 var tab_overzicht = Titanium.UI.createTab({
     title:'Overzicht',

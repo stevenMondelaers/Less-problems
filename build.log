@@ -1,12 +1,12 @@
 Logfile initialized
 [INFO] logfile = D:\Workspaces\Titanium\Less-problems\build.log
-[DEBUG] C:\Users\Steven_School\AppData\Roaming\Titanium\mobilesdk\win32\1.7.5\android\builder.py simulator Less problems D:\Android\android-sdk D:\Workspaces\Titanium\Less-problems eu.lessius.mechelen.lessproblems 14 HVGA /192.168.208.1:59221
+[DEBUG] C:\Users\Steven_School\AppData\Roaming\Titanium\mobilesdk\win32\1.7.5\android\builder.py simulator Less problems D:\Android\android-sdk D:\Workspaces\Titanium\Less-problems eu.lessius.mechelen.lessproblems 14 HVGA /192.168.208.1:56626
 [INFO] Building Less problems for Android ... one moment
 [INFO] Titanium SDK version: 1.7.5 (11/02/11 17:00 ab20af7)
 [DEBUG] Waiting for device to be ready ...
 [TRACE] adb devices returned 1 devices/emulators
 [DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.030000 seconds on emulator to get ready
+[DEBUG] waited 0.029000 seconds on emulator to get ready
 [DEBUG] eu.lessius.mechelen.lessproblems installed? True
 [INFO] Fastdev server running, deploying in Fastdev mode
 [INFO] Copying project resources..
