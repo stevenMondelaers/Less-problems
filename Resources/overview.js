@@ -62,8 +62,13 @@ xhr_details.onload = function(){
 			var elements = doc.getElementsByTagName("title");
 			
 			var view_details = Ti.UI.createView({
-				backgroundColor: '#fff'
+				backgroundColor: '#333'
 			});
+
+			if (Titanium.Platform.name == 'android')
+			{
+    			view_details.layout = "vertical";
+			}
 			
 			window_overzicht.title = doc.getElementsByTagName("title").item(0).text;
 			
@@ -98,7 +103,6 @@ xhr_details.onload = function(){
 			});
 			
 			var view_beschrijving = Ti.UI.createScrollView({
-				backgroundColor: '#fff',
 				contentWidth:'auto',
 				contentHeight:'auto',
 				top:60
@@ -126,11 +130,11 @@ xhr_details.onload = function(){
     			view_details.add(btn_back);
 			}
 			
-			//view_titel.add(lblTitel);
+			view_titel.add(lblTitel);
 			view_lokaal.add(lblLokaal);
 			view_beschrijving.add(lblBeschrijving);
 			
-			//view_details.add(view_titel);
+			view_details.add(view_titel);
 			view_details.add(view_lokaal);
 			view_details.add(view_beschrijving);
 			
