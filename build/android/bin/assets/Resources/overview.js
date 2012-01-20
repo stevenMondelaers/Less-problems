@@ -41,8 +41,6 @@ xhr.onload = function()
 	}
 	
 	tableview_overzicht.addEventListener('click', function(e){
-		//alert(e.rowData.id);
-		//getDetails(e.rowData.id);
 		
 		xhr_details.open('GET' , 'http://less-problems.webatu.com/api/node/'+e.rowData.id+'.xml');
 		xhr_details.send();
@@ -142,6 +140,7 @@ xhr_details.onload = function(){
 			
 		}
 
+xhr.setTimeout(5000);
 xhr.open('GET','http://less-problems.webatu.com/api/views/problems.xml');
 xhr.send();
 
