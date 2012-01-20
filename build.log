@@ -1,16 +1,16 @@
 Logfile initialized
 [INFO] logfile = D:\Workspaces\Titanium\Less-problems\build.log
-[DEBUG] C:\Users\Steven_School\AppData\Roaming\Titanium\mobilesdk\win32\1.7.5\android\builder.py simulator Less problems D:\Android\android-sdk D:\Workspaces\Titanium\Less-problems eu.lessius.mechelen.lessproblems 14 HVGA /192.168.208.1:63203
+[DEBUG] C:\Users\Steven_School\AppData\Roaming\Titanium\mobilesdk\win32\1.7.5\android\builder.py simulator Less problems D:\Android\android-sdk D:\Workspaces\Titanium\Less-problems eu.lessius.mechelen.lessproblems 14 HVGA
 [INFO] Building Less problems for Android ... one moment
 [INFO] Titanium SDK version: 1.7.5 (11/02/11 17:00 ab20af7)
 [DEBUG] Waiting for device to be ready ...
 [TRACE] adb devices returned 1 devices/emulators
 [DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.035000 seconds on emulator to get ready
+[DEBUG] waited 0.032000 seconds on emulator to get ready
 [DEBUG] eu.lessius.mechelen.lessproblems installed? True
 [INFO] Fastdev server running, deploying in Fastdev mode
 [INFO] Copying project resources..
-[TRACE] COPYING MODIFIED FILE: D:\Workspaces\Titanium\Less-problems\Resources\overview.js => D:\Workspaces\Titanium\Less-problems\build\android\bin\assets\Resources\overview.js
+[TRACE] COPYING MODIFIED FILE: D:\Workspaces\Titanium\Less-problems\Resources\new_problem.js => D:\Workspaces\Titanium\Less-problems\build\android\bin\assets\Resources\new_problem.js
 [INFO] Tiapp.xml unchanged, skipping class generation
 [DEBUG] Processing Android resource drawables
 [INFO] Waiting for SDCard to become available..

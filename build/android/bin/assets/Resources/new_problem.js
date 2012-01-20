@@ -1,29 +1,36 @@
-
-var forms = require('lib/forms');
-
-var fields = [
-	{ title:'Probleem', type:'text', id:'probleem' },
-	{ title:'Beschrijving', type:'text', id:'beschrijving' },
-	{ title:'Locatie', type:'picker', id:'locatie', data: [
-		'Kruidtuin', 'De Vest', 'Nog iets anders'
-	] },
-	{ title:'Submit', type:'submit', id:'registerProblem' }
-];
-
-var window_probleem = Ti.UI.createWindow({  
-    backgroundColor:'#fff',
-    title: 'Probleem toevoegen'
-    //navBarHidden:true,
-    //fullscreen: true
+var txtTitel = Ti.UI.createTextField({
+	hintText : 'Probleem',
+	width: '75%'
 });
 
-var form = forms.createForm({
-	style: forms.STYLE_LABEL,
-	fields: fields
+var txtLocatie = Ti.UI.createTextField({
+	hintText : 'Locatie',
+	width: '75%'
 });
 
-form.addEventListener('registerProblem', function(e) {
-	alert(e.values);
+var txtBeschrijving = Ti.UI.createTextField({
+	hintText : 'Beschrijving',
+	width: '75%'
 });
 
-window_probleem.add(form);
+var window_probleem = Ti.UI.createWindow({
+	backgroundColor : '#fff',
+	title : 'Probleem toevoegen',
+	layout: 'vertical'
+	//navBarHidden:true,
+	//fullscreen: true
+});
+
+var btnSubmit = Ti.UI.createButton({
+	title : 'Submit'
+})
+
+window_probleem.add(txtTitel);
+window_probleem.add(txtLocatie);
+window_probleem.add(txtBeschrijving);
+window_probleem.add(btnSubmit);
+
+
+btnSubmit.addEventListener('click', function(e) {
+	// Doe iets
+});
