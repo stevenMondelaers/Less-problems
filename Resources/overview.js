@@ -60,7 +60,7 @@ xhr_details.onload = function(){
 			var elements = doc.getElementsByTagName("title");
 			
 			var view_details = Ti.UI.createView({
-				backgroundColor: '#333'
+				backgroundColor: '#fff'
 			});
 
 			if (Titanium.Platform.name == 'android')

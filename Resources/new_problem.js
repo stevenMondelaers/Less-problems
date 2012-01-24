@@ -1,5 +1,59 @@
+
+var forms = require('lib/forms');
+
+var fields = [
+	{ title:'Probleem', type:'text', id:'txtTitel' },
+	{ title:'Beschrijving', type:'text', id:'txtBeschrijving' },
+	{ title:'Locatie', type:'picker', id:'txtLocatie', data: [
+		'Kruidtuin', 'De Vest', 'Nog iets anders'
+	] },
+	{ title:'Submit', type:'submit', id:'registerProblem' }
+];
+
+var window_probleem = Ti.UI.createWindow({  
+    backgroundColor:'#fff',
+    title: 'Probleem toevoegen'
+    //navBarHidden:true,
+    //fullscreen: true
+});
+
+var form = forms.createForm({
+	style: forms.STYLE_LABEL,
+	fields: fields
+});
+
+window_probleem.add(form);
+
+form.addEventListener( 'registerProblem', function( e ) {
+	
+	var xhr = Titanium.Network.createHTTPClient();
+	xhr.onerror = function(e) {
+		alert("ERROR " + e.error);
+		Titanium.API.info("IN ERROR: " + e.error);
+	};
+
+	xhr.onload = function(e) {
+		Titanium.API.info('IN ONLOAD');
+		Titanium.API.info('(' + this.responseText + ')');
+		Titanium.API.info("status: " + this.status + "readyState " + this.readyState);
+
+	};
+	
+	var jsonString = '{"node":{"type":"probleem","title":"'+ e.values.txtTitel.toString() +'","body":{"und":{"0":{"value":"'+ e.values.txtBeschrijving.toString() +'"}}},"field_lokaal":{"und":{"0":{"value":"'+ e.values.txtLocatie.toString() +'"}}}}}';
+
+	xhr.open("POST", "http://less-problems.webatu.com/api/node");
+	xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+	xhr.send(jsonString);
+	
+});
+
+
+
+/*
 var txtTitel = Ti.UI.createTextField({
 	hintText : 'Probleem',
+	top: 5,
+	left: 10,
 	width: '75%'
 });
 
@@ -15,12 +69,15 @@ var txtBeschrijving = Ti.UI.createTextField({
 
 var window_probleem = Ti.UI.createWindow({
 	backgroundColor : '#fff',
-	title : 'Probleem toevoegen',
-	layout: 'vertical'
+	title : 'Probleem toevoegen'
 });
 
 var btnSubmit = Ti.UI.createButton({
-	title : 'Submit'
+	title : 'Submit',
+	width: 50,
+	height: 10,
+	top: 80,
+	left: 10
 });
 
 window_probleem.add(txtTitel);
@@ -58,3 +115,5 @@ btnSubmit.addEventListener('click', function(e) {
 	xhr.send(jsonString);
 	
 });
+
+*/
