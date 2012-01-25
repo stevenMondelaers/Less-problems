@@ -66,6 +66,7 @@ xhr_details.onload = function(){
 			if (Titanium.Platform.name == 'android')
 			{
     			view_details.layout = "vertical";
+    			view_details.backgroundColor = '#333';
 			}
 			
 			window_overzicht.title = doc.getElementsByTagName("title").item(0).text;
@@ -95,28 +96,38 @@ xhr_details.onload = function(){
 				height: 50
 			});
 			
+			var border = Ti.UI.createView({
+    			backgroundColor: '#e0e0e0',
+    			height: 1,
+    			top: 50,
+    			left: 10,
+    			right: 10
+			});
+ 
+
+			
 			var lblLokaal = Ti.UI.createLabel({ 
-				font: {fontSize: 12},
+				font: {fontSize: 14},
 				left: 10
 			});
 			
 			var view_beschrijving = Ti.UI.createScrollView({
 				contentWidth:'auto',
 				contentHeight:'auto',
-				top:60
+				top:70
 			});
 			
 			//var lblBeschrijving = Ti.UI.createLabel();
 			var lblBeschrijving = Ti.UI.createLabel({ 
-				font: {fontSize: 12},
+				font: {fontSize: 14},
 				left: 10,
 				top: 0,
 				height: 'auto'
 			});
 			
 			lblTitel.text = doc.getElementsByTagName("title").item(0).text;
-			lblLokaal.text = 'Lokaal: ' + doc.getElementsByTagName("value").item(1).text;
-			lblBeschrijving.text = 'Beschrijving: \n \n' + doc.getElementsByTagName("value").item(0).text;
+			lblLokaal.text = 'Locatie: ' + doc.getElementsByTagName("value").item(1).text;
+			lblBeschrijving.text = doc.getElementsByTagName("value").item(0).text;
 			
 			if (Titanium.Platform.name == 'iPhone OS')
 			{
@@ -126,10 +137,11 @@ xhr_details.onload = function(){
 			if (Titanium.Platform.name == 'android')
 			{
     			view_details.add(btn_back);
+    			view_titel.add(lblTitel);
 			}
 			
-			view_titel.add(lblTitel);
 			view_lokaal.add(lblLokaal);
+			view_lokaal.add(border);
 			view_beschrijving.add(lblBeschrijving);
 			
 			view_details.add(view_titel);
