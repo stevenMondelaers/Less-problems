@@ -3,7 +3,7 @@ var forms = require('lib/forms');
 
 var fields = [
 	{ title:'Probleem', type:'text', id:'txtTitel' },
-	{ title:'Beschrijving', type:'text', id:'txtBeschrijving' },
+	{ title:'Beschrijving', type:'textarea', id:'txtBeschrijving' },
 	{ title:'Locatie', type:'picker', id:'txtLocatie', data: [
 		'Kruidtuin', 'De Vest', 'Nog iets anders'
 	] },

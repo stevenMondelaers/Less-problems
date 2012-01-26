@@ -9,6 +9,7 @@ exports.TYPE_PASSWORD = 'password';
 exports.TYPE_PHONE = 'phone';
 exports.TYPE_PICKER = 'picker';
 exports.TYPE_TEXT = 'text';
+exports.TYPE_TEXTAREA = 'textarea';
 exports.TYPE_SUBMIT = 'submit';
 
 var isAndroid = Ti.Platform.osname === 'android';
@@ -19,6 +20,15 @@ var textFieldDefaults = {
 	color: '#222',
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
 };
+
+var textAreaDefaults = {
+	height: '100dp',
+	width: '250dp',
+	top: '10dp',
+	color: '#222',
+	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
+};
+
 var keyboardMap = {};
 keyboardMap[exports.TYPE_EMAIL] = Ti.UI.KEYBOARD_EMAIL;
 keyboardMap[exports.TYPE_NUMBER] = Ti.UI.KEYBOARD_NUMBER_PAD;
@@ -81,6 +91,11 @@ var addField = function(field, fieldRefs) {
 		type === exports.TYPE_PHONE ||
 		type === exports.TYPE_PASSWORD) {
 		fieldObject = Ti.UI.createTextField(textFieldDefaults);
+		fieldObject.keyboardType = keyboardMap[type];
+		fieldObject.passwordMask = type === exports.TYPE_PASSWORD;
+		handleStyle(form, fieldObject, title);
+	} else if (type === exports.TYPE_TEXTAREA) {
+		fieldObject = Ti.UI.createTextField(textAreaDefaults);
 		fieldObject.keyboardType = keyboardMap[type];
 		fieldObject.passwordMask = type === exports.TYPE_PASSWORD;
 		handleStyle(form, fieldObject, title);
